@@ -1,0 +1,25 @@
+name: moveapp
+
+description: MoveApp Flutter Project
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  firebase_core: ^3.0.0
+  firebase_auth: ^5.0.0
+  cloud_firestore: ^5.0.0
+  google_maps_flutter: ^2.5.0
+  flutter_polyline_points: ^2.0.0
+  geolocator: ^11.0.0
+  firebase_messaging: ^15.0.0
+  flutter_local_notifications: ^17.0.0
+flutter:
+  uses-material-design: true

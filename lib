@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MoveApp());
+}
+
+class MoveApp extends StatelessWidget {
+  const MoveApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'MoveApp',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('MoveApp 🚖'),
+          backgroundColor: Colors.green,
+        ),
+        body: const Center(
+          child: Text(
+            'MoveApp Running Successfully 🚀',
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+      ),
+    );
+  }
+}

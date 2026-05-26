@@ -1,4 +1,4 @@
-package co.appbrewery.dicee;
+package com.example.moveapp;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
 
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MoveHomeScreen(),
-    );
-  }
+      home: MoveHomeScreen() 
+       body: Center(
+          child: Image.asset("assets/bg.jpg"),
+    );  
+  }   
 }

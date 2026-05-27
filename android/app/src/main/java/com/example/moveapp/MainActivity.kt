@@ -3,5 +3,5 @@ package com.example.moveapp
 import android.os.Bundle
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity() {
+public class MainActivity extends FlutterActivity {
 }

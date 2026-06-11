@@ -124,14 +124,43 @@ class MoveHomeScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+                  
+    const SizedBox(height: 30),
+                      
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: () {},
+    child: const Text("🚕 Book Ride"),
+  ),
+),
+
+const SizedBox(height: 15),
+
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: () {},
+    child: const Text("📦 Delivery"),
+  ),
+),
+
+const SizedBox(height: 15),
+
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: () {},
+    child: const Text("🚚 Cargo"),
+  ),
+),
+
+const SizedBox(height: 15),
+
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: () {},
+    child: const Text("💰 Wallet"),
+  ),
+),

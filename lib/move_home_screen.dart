@@ -163,6 +163,7 @@ SizedBox(
     child: Text("💰 Wallet"),
   ),
 ),
+],
                   ),
                 ),
               ],

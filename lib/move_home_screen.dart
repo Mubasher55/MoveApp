@@ -42,7 +42,7 @@ class MoveHomeScreen extends StatelessWidget {
                   mainAxisAlignment:
                       MainAxisAlignment.spaceBetween,
 
-                  children: const [
+                  children:  [
 
                     Icon(
                       Icons.menu,
@@ -102,7 +102,7 @@ class MoveHomeScreen extends StatelessWidget {
                     crossAxisAlignment:
                         CrossAxisAlignment.start,
 
-                    children: const [
+                    children:  [
 
                       Text(
                         "Wallet Balance",
@@ -116,51 +116,60 @@ class MoveHomeScreen extends StatelessWidget {
                       SizedBox(height: 10),
 
                       Text(
-                        "Rs 18,500",
-
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 34,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                  
-    const SizedBox(height: 30),
-                      
-SizedBox(
-  width: double.infinity,
-  child: ElevatedButton(
-    onPressed: () {},
-    child: const Text("🚕 Book Ride"),
+  "Rs 18,500",
+  style: TextStyle(
+    color: Colors.white,
+    fontSize: 34,
+    fontWeight: FontWeight.bold,
   ),
 ),
 
-const SizedBox(height: 15),
+SizedBox(height: 30),
 
 SizedBox(
   width: double.infinity,
   child: ElevatedButton(
     onPressed: () {},
-    child: const Text("📦 Delivery"),
+    child: Text("🚕 Book Ride"),
   ),
 ),
 
-const SizedBox(height: 15),
+SizedBox(height: 15),
 
 SizedBox(
   width: double.infinity,
   child: ElevatedButton(
     onPressed: () {},
-    child: const Text("🚚 Cargo"),
+    child: Text("📦 Delivery"),
   ),
 ),
 
-const SizedBox(height: 15),
+SizedBox(height: 15),
 
 SizedBox(
   width: double.infinity,
   child: ElevatedButton(
     onPressed: () {},
-    child: const Text("💰 Wallet"),
+    child: Text("🚚 Cargo"),
   ),
 ),
+
+SizedBox(height: 15),
+
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: () {},
+    child: Text("💰 Wallet"),
+  ),
+),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

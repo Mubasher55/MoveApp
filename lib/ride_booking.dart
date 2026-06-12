@@ -94,18 +94,16 @@ class _RideBookingScreenState
 
             const SizedBox(height: 30),
 
-            ElevatedButton(
-              onPressed: () async {
-                await bookRide();
-                
-                ScaffoldMessenger.of(context).showSnackBar(
+  ElevatedButton(
+  onPressed: () {
+    ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("Ride Booked Successfully 🚕"),
+        content: Text("Button Working ✅"),
       ),
     );
-              },
-              child: const Text("BOOK RIDE"),
-            ),
+  },
+  child: const Text("BOOK RIDE"),
+),
 
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'move_home_screen.dart';
 
 void main() {
+  
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();

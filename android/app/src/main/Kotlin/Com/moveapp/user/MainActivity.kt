@@ -1,4 +1,4 @@
-package com.example.moveapp
+package com.moveapp.user
 
 import io.flutter.embedding.android.FlutterActivity
 

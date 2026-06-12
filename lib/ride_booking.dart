@@ -96,9 +96,17 @@ class _RideBookingScreenState
 
   ElevatedButton(
   onPressed: () {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Button Working ✅"),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Test"),
+        content: const Text("Button Working ✅"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+        ],
       ),
     );
   },

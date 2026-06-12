@@ -95,20 +95,26 @@ class _RideBookingScreenState
             const SizedBox(height: 30),
 
   ElevatedButton(
-  onPressed: () {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Test"),
-        content: const Text("Button Working ✅"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("OK"),
-          ),
-        ],
-      ),
-    );
+  onPressed: () async {
+    try {
+      await bookRide();
+
+      showDialog(
+        context: context,
+        builder: (context) => const AlertDialog(
+          title: Text("Success"),
+          content: Text("Ride Saved 🚕"),
+        ),
+      );
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Error"),
+          content: Text(e.toString()),
+        ),
+      );
+    }
   },
   child: const Text("BOOK RIDE"),
 ),

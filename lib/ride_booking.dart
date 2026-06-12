@@ -97,6 +97,12 @@ class _RideBookingScreenState
             ElevatedButton(
               onPressed: () async {
                 await bookRide();
+                
+                ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Ride Booked Successfully 🚕"),
+      ),
+    );
               },
               child: const Text("BOOK RIDE"),
             ),

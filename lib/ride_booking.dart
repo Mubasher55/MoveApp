@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RideBookingScreen extends StatefulWidget {
+  const RideBookingScreen({super.key});
 
   @override
   State<RideBookingScreen> createState() =>
@@ -15,25 +16,23 @@ class _RideBookingScreenState
   TextEditingController drop = TextEditingController();
   TextEditingController fare = TextEditingController();
 
-  Future bookRide() async {
+  Future<void> bookRide() async {
 
-await FirebaseFirestore.instance
-    .collection("rides")
-    .add({
+    await FirebaseFirestore.instance
+        .collection("rides")
+        .add({
 
-  "pickup": pickupController.text,
-  "drop": dropController.text,
-  "fare": fare,
+      "pickup": pickup.text,
+      "drop": drop.text,
+      "fare": fare.text,
 
-  "status": "pending",
+      "status": "pending",
 
-  // 🚖 AUTO ASSIGN
-  "driverId": "",
+      "driverId": "",
 
-  "createdAt":
-      DateTime.now().toString(),
-
-});
+      "createdAt":
+          DateTime.now().toString(),
+    });
 
     print("Ride Booked");
   }
@@ -46,13 +45,13 @@ await FirebaseFirestore.instance
       backgroundColor: Colors.black,
 
       appBar: AppBar(
-        title: Text("Book Ride"),
+        title: const Text("Book Ride"),
         backgroundColor: Colors.orange,
       ),
 
       body: Padding(
 
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
 
         child: Column(
 
@@ -60,46 +59,46 @@ await FirebaseFirestore.instance
 
             TextField(
               controller: pickup,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
 
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Pickup Location",
                 hintStyle: TextStyle(color: Colors.grey),
               ),
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             TextField(
               controller: drop,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
 
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Drop Location",
                 hintStyle: TextStyle(color: Colors.grey),
               ),
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             TextField(
               controller: fare,
               keyboardType: TextInputType.number,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
 
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Fare Offer",
                 hintStyle: TextStyle(color: Colors.grey),
               ),
             ),
 
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             ElevatedButton(
-              onPressed:book ride,
-              sendRideNotification();
-
-              child: Text("BOOK RIDE"),
+              onPressed: () async {
+                await bookRide();
+              },
+              child: const Text("BOOK RIDE"),
             ),
 
           ],

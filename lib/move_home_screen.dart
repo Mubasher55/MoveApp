@@ -130,7 +130,14 @@ SizedBox(height: 30),
 SizedBox(
   width: double.infinity,
   child: ElevatedButton(
-    onPressed: () {},
+    onPressed: () {
+     Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => RideBookingScreen(),
+    ),
+  ); 
+    },
     child: Text("🚕 Book Ride"),
   ),
 ),

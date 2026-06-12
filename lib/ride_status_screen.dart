@@ -1,23 +1,36 @@
-StreamBuilder(
-  stream: FirebaseFirestore.instance
-      .collection("rides")
-      .snapshots(),
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  builder: (context, snapshot) {
+class RideListScreen extends StatelessWidget {
+  const RideListScreen({super.key});
 
-    var rides = snapshot.data!.docs;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("All Rides")),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("rides").snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-    return ListView.builder(
-      itemCount: rides.length,
-      itemBuilder: (context, index) {
+          var docs = snapshot.data!.docs;
 
-        var ride = rides[index];
+          return ListView.builder(
+            itemCount: docs.length,
+            itemBuilder: (context, index) {
+              var data = docs[index];
 
-        return ListTile(
-          title: Text(ride["pickup"]),
-          subtitle: Text("Status: ${ride["status"]}"),
-        );
-      },
+              return ListTile(
+                title: Text(data["pickup"]),
+                subtitle: Text(data["drop"]),
+                trailing: Text(data["fare"]),
+              );
+            },
+          );
+        },
+      ),
     );
-  },
-);
+  }
+}

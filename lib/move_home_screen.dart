@@ -121,7 +121,7 @@ class MoveHomeScreen extends StatelessWidget {
   "Rs 18,500",
   style: TextStyle(
     color: Colors.white,
-    fontSize: 34,
+    fontSize: 28,
     fontWeight: FontWeight.bold,
   ),
 ),

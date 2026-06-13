@@ -32,7 +32,7 @@ class MoveHomeScreen extends StatelessWidget {
         ),
 
         child: SafeArea(
-
+          child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20),
 
@@ -135,7 +135,7 @@ SizedBox(
      Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => RideBookingScreen(),
+      builder: (context) => const RideBookingScreen(),
     ),
   ); 
     },

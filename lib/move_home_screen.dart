@@ -48,7 +48,7 @@ class MoveHomeScreen extends StatelessWidget {
 
                     Icon(
                       Icons.menu,
-                      color: Colors.white,
+                      color: Colors.black,
                       size: 30,
                     ),
 
@@ -186,6 +186,7 @@ SizedBox(
     child: const Text("🗺️ Open Map"),
   ),
 ), 
+                      
   SizedBox(height: 15),
 
 SizedBox(

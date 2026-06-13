@@ -60,9 +60,6 @@ class _MapScreenState extends State<MapScreen> {
         onMapCreated: (controller) {
           mapController = controller;
         },
-
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
       ),
 
       floatingActionButton: FloatingActionButton(

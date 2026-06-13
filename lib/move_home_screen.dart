@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ride_booking.dart';
 import 'map_screen.dart';
+import 'driver_screen.dart';
 void main() {
   runApp(
     const MaterialApp(
@@ -184,7 +185,23 @@ SizedBox(
     },
     child: const Text("🗺️ Open Map"),
   ),
-),                      
+), 
+  SizedBox(height: 15),
+
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const DriverScreen(),
+        ),
+      );
+    },
+    child: const Text("🚖 Driver Panel"),
+  ),
+),
 ],
                   ),
                 ),

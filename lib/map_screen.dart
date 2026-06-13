@@ -3,123 +3,74 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
+  const MapScreen({super.key});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
-
-  double driverLat = 31.5204;
-  double driverLng = 74.3587;
-
-  LatLng currentLocation =
-      LatLng(31.5204, 74.3587);
-
   GoogleMapController? mapController;
 
-  LatLng currentLocation =
-      LatLng(31.5204, 74.3587);
+  static const LatLng initialPosition =
+      LatLng(31.5204, 74.3587); // Lahore default
+
+  LatLng currentPosition = initialPosition;
 
   @override
   void initState() {
-
     super.initState();
-
-    getLocation();
- 
-    startLiveTracking();
+    getUserLocation();
   }
 
-  Future getLocation() async {
-
+  Future<void> getUserLocation() async {
     LocationPermission permission =
-    await Geolocator.requestPermission();
+        await Geolocator.requestPermission();
 
     Position position =
-    await Geolocator.getCurrentPosition();
+        await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
 
     setState(() {
-
-      currentLocation =
-          LatLng(position.latitude,
-              position.longitude);
-              void startLiveTracking() {
-
-  Geolocator.getPositionStream(
-    locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 10,
-    ),
-  ).listen((Position position) {
-
-    setState(() {
-
-      driverLat = position.latitude;
-      driverLng = position.longitude;
-
+      currentPosition =
+          LatLng(position.latitude, position.longitude);
     });
 
-  });
-}
-
-    });
+    mapController?.animateCamera(
+      CameraUpdate.newLatLng(currentPosition),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       appBar: AppBar(
-        title: Text("MoveApp Live Map"),
+        title: const Text("Select Location"),
         backgroundColor: Colors.orange,
       ),
 
       body: GoogleMap(
-
-        initialCameraPosition: CameraPosition(
-          target: currentLocation,
+        initialCameraPosition: const CameraPosition(
+          target: initialPosition,
           zoom: 14,
         ),
 
         onMapCreated: (controller) {
-
           mapController = controller;
         },
 
-        markers: { 
-          Marker(
-            markerId: MarkerId("const"),
-            position: currentLocation,
-          ),Marker(
-  markerId: MarkerId("driver"),
-  position: LatLng(driverLat, driverLng)
-    currentLocation.latitude + 0.002,
-    currentLocation.longitude + 0.002,
-  ),
-),
+        myLocationEnabled: true,
+        myLocationButtonEnabled: true,
+      ),
 
-StreamBuilder(
-  stream: FirebaseFirestore.instance
-      .collection("drivers")
-      .doc("driver1")
-      .snapshots(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
+        child: const Icon(Icons.my_location),
 
-  builder: (context, snapshot) {
-
-    if (!snapshot.hasData) {
-      return CircularProgressIndicator();
-    }
-
-    var data = snapshot.data!;
-
-    return Marker(
-      markerId: MarkerId("driver"),
-      position: LatLng(
-        data["latitude"],
-        data["longitude"],
+        onPressed: () async {
+          await getUserLocation();
+        },
       ),
     );
-  },
-)
+  }
+}

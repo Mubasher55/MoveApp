@@ -2,126 +2,152 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DriverScreen extends StatelessWidget {
+  const DriverScreen({super.key});
 
-  Future acceptRide(String docId) async {
-
+  Future<void> acceptRide(String rideId) async {
     await FirebaseFirestore.instance
         .collection("rides")
-        .doc(docId)
+        .doc(rideId)
         .update({
-
       "status": "accepted",
-      
       "driverId": "driver1",
-
     });
+  }
 
-    print("Ride Accepted");
+  Future<void> startRide(String rideId) async {
+    await FirebaseFirestore.instance
+        .collection("rides")
+        .doc(rideId)
+        .update({
+      "status": "started",
+    });
+  }
+
+  Future<void> endRide(String rideId) async {
+    await FirebaseFirestore.instance
+        .collection("rides")
+        .doc(rideId)
+        .update({
+      "status": "completed",
+      "paymentStatus": "paid",
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       backgroundColor: Colors.black,
 
       appBar: AppBar(
-        title: Text("Driver Panel"),
+        title: const Text("Driver Panel"),
         backgroundColor: Colors.orange,
       ),
 
-      body: StreamBuilder(
-await FirebaseFirestore.instance
-  .collection("rides")
-  .doc(rideId)
-  .update({
-    "status": "completed",
-  
-  });
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("rides")
+            .snapshots(),
 
         builder: (context, snapshot) {
-
           if (!snapshot.hasData) {
-
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
           var rides = snapshot.data!.docs;
 
-          return ListView.builder(
+          if (rides.isEmpty) {
+            return const Center(
+              child: Text(
+                "No Rides Found",
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
 
+          return ListView.builder(
             itemCount: rides.length,
 
             itemBuilder: (context, index) {
-
               var ride = rides[index];
 
               return Card(
-
                 color: Colors.grey[900],
 
-                child: ListTile(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
 
-                  title: Text(
-                    "${ride["pickup"]} → ${ride["drop"]}",
-                    style: TextStyle(color: Colors.white),
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+
+                    children: [
+
+                      Text(
+                        "${ride["pickup"]} → ${ride["drop"]}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Text(
+                        "Fare: ${ride["fare"]}",
+                        style: const TextStyle(
+                          color: Colors.orange,
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Text(
+                        "Status: ${ride["status"]}",
+                        style: const TextStyle(
+                          color: Colors.green,
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceEvenly,
+
+                        children: [
+
+                          ElevatedButton(
+                            onPressed: () {
+                              acceptRide(ride.id);
+                            },
+                            child: const Text("Accept"),
+                          ),
+
+                          ElevatedButton(
+                            onPressed: () {
+                              startRide(ride.id);
+                            },
+                            child: const Text("Start"),
+                          ),
+
+                          ElevatedButton(
+                            onPressed: () {
+                              endRide(ride.id);
+                            },
+                            child: const Text("End"),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-
-                  subtitle: Text(
-                    "Fare: ${ride["fare"]}",
-                    style: TextStyle(color: Colors.orange),
-                  ),
-
-                  trailing: Column(
-
-  children: [
-
-    ElevatedButton(
-
-      onPressed: () {
-
-        acceptRide(ride.id);
-
-      },
-
-      child: Text("Accept"),
-    ),
-
-    ElevatedButton(
-
-      onPressed: () async {
-
-        .collection("rides")
-        .where("status", isEqualTo: "pending")
-
-        });
-
-      },
-
-      child: Text("Start"),
-    ),
-
-    ElevatedButton(
-
-      onPressed: () async {
-
-        await FirebaseFirestore.instance
-            .collection("rides")
-            .doc(ride.id)
-            .update({
-
-          "status": "completed",
-          "paymentStatus": "paid".
-
-        });
-
-      },
-
-      child: Text("End"),
-    ),
-
-  ],
-),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}

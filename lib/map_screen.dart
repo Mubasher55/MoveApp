@@ -50,8 +50,10 @@ class _MapScreenState extends State<MapScreen> {
       ),
 
       body: GoogleMap(
+        myLocationEnabled: true,
+        myLocationButtonEnabled: true,
         initialCameraPosition: const CameraPosition(
-          target: initialPosition,
+          target: LatLng(31.5204, 74.3587),
           zoom: 14,
         ),
 

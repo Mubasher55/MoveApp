@@ -171,6 +171,20 @@ SizedBox(
     child: Text("💰 Wallet"),
   ),
 ),
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MapScreen(),
+        ),
+      );
+    },
+    child: const Text("🗺️ Open Map"),
+  ),
+),                      
 ],
                   ),
                 ),

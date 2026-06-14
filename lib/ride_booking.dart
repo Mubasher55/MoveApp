@@ -3,125 +3,126 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'ride_status_screen.dart';
 
 class RideBookingScreen extends StatefulWidget {
-  const RideBookingScreen({super.key});
+const RideBookingScreen({super.key});
 
-  @override
-  State<RideBookingScreen> createState() =>
-      _RideBookingScreenState();
+@override
+State<RideBookingScreen> createState() =>
+_RideBookingScreenState();
 }
 
 class _RideBookingScreenState
-    extends State<RideBookingScreen> {
+extends State<RideBookingScreen> {
 
-  TextEditingController pickup = TextEditingController();
-  TextEditingController drop = TextEditingController();
-  TextEditingController fare = TextEditingController();
+TextEditingController pickup = TextEditingController();
+TextEditingController drop = TextEditingController();
+TextEditingController fare = TextEditingController();
 
-  Future<String> bookRide() async {
+Future<String> bookRide() async {
 
-  DocumentReference docRef =
-      await FirebaseFirestore.instance
-          .collection("rides")
-          .add({
+DocumentReference docRef =
+    await FirebaseFirestore.instance
+        .collection("rides")
+        .add({
 
-    "pickup": pickup.text,
-    "drop": drop.text,
-    "fare": fare.text,
-    "status": "pending",
-    "driverId": "",
-    "createdAt": DateTime.now().toString(),
-  });
+  "pickup": pickup.text,
+  "drop": drop.text,
+  "fare": fare.text,
+  "status": "pending",
+  "driverId": "",
+  "createdAt": DateTime.now().toString(),
+});
 
-  return docRef.id;
-  }
-  @override
-  Widget build(BuildContext context) {
+return docRef.id;
 
-    return Scaffold(
+}
 
-      backgroundColor: Colors.black,
+@override
+Widget build(BuildContext context) {
 
-      appBar: AppBar(
-        title: const Text("Book Ride"),
-        backgroundColor: Colors.orange,
-      ),
+return Scaffold(
+  backgroundColor: Colors.black,
 
-      body: Padding(
+  appBar: AppBar(
+    title: const Text("Book Ride"),
+    backgroundColor: Colors.orange,
+  ),
 
-        padding: const EdgeInsets.all(20),
+  body: Padding(
+    padding: const EdgeInsets.all(20),
 
-        child: Column(
+    child: Column(
+      children: [
 
-          children: [
-
-            TextField(
-              controller: pickup,
-              style: const TextStyle(color: Colors.white),
-
-              decoration: const InputDecoration(
-                hintText: "Pickup Location",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              controller: drop,
-              style: const TextStyle(color: Colors.white),
-
-              decoration: const InputDecoration(
-                hintText: "Drop Location",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              controller: fare,
-              keyboardType: TextInputType.number,
-              style: const TextStyle(color: Colors.white),
-
-              decoration: const InputDecoration(
-                hintText: "Fare Offer",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-  ElevatedButton(
-  onPressed: () async {
-  try {
-
-    String rideId = await bookRide();
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            RideStatusScreen(
-          rideId: rideId,
+        TextField(
+          controller: pickup,
+          style: const TextStyle(color: Colors.white),
+          decoration: const InputDecoration(
+            hintText: "Pickup Location",
+            hintStyle: TextStyle(color: Colors.grey),
+          ),
         ),
-      ),
-    );
 
-  } catch (e) {
+        const SizedBox(height: 20),
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Error"),
-        content: Text(e.toString()),
-      ),
-    );
-  }
-},
-
-          ],
+        TextField(
+          controller: drop,
+          style: const TextStyle(color: Colors.white),
+          decoration: const InputDecoration(
+            hintText: "Drop Location",
+            hintStyle: TextStyle(color: Colors.grey),
+          ),
         ),
-      ),
-    );
-  }
+
+        const SizedBox(height: 20),
+
+        TextField(
+          controller: fare,
+          keyboardType: TextInputType.number,
+          style: const TextStyle(color: Colors.white),
+          decoration: const InputDecoration(
+            hintText: "Fare Offer",
+            hintStyle: TextStyle(color: Colors.grey),
+          ),
+        ),
+
+        const SizedBox(height: 30),
+
+        ElevatedButton(
+          onPressed: () async {
+
+            try {
+
+              String rideId = await bookRide();
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      RideStatusScreen(
+                    rideId: rideId,
+                  ),
+                ),
+              );
+
+            } catch (e) {
+
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Error"),
+                  content: Text(e.toString()),
+                ),
+              );
+            }
+          },
+
+          child: const Text("BOOK RIDE"),
+        ),
+
+      ],
+    ),
+  ),
+);
+
+}
 }

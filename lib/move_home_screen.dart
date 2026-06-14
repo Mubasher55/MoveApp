@@ -208,9 +208,10 @@ SizedBox(
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
+          ), // Padding
+        ),   // SingleChildScrollView
+      ),     // SafeArea
+    ),       // Container
+  );         // Scaffold
+}
 }

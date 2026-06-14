@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'ride_status_screen.dart';
 
 class RideBookingScreen extends StatefulWidget {
   const RideBookingScreen({super.key});
@@ -16,27 +17,23 @@ class _RideBookingScreenState
   TextEditingController drop = TextEditingController();
   TextEditingController fare = TextEditingController();
 
-  Future<void> bookRide() async {
+  Future<String> bookRide() async {
 
-    await FirebaseFirestore.instance
-        .collection("rides")
-        .add({
+  DocumentReference docRef =
+      await FirebaseFirestore.instance
+          .collection("rides")
+          .add({
 
-      "pickup": pickup.text,
-      "drop": drop.text,
-      "fare": fare.text,
+    "pickup": pickup.text,
+    "drop": drop.text,
+    "fare": fare.text,
+    "status": "pending",
+    "driverId": "",
+    "createdAt": DateTime.now().toString(),
+  });
 
-      "status": "pending",
-
-      "driverId": "",
-
-      "createdAt":
-          DateTime.now().toString(),
-    });
-
-    print("Ride Booked");
+  return docRef.id;
   }
-
   @override
   Widget build(BuildContext context) {
 
@@ -96,28 +93,31 @@ class _RideBookingScreenState
 
   ElevatedButton(
   onPressed: () async {
-    try {
-      await bookRide();
+  try {
 
-      showDialog(
-        context: context,
-        builder: (context) => const AlertDialog(
-          title: Text("Success"),
-          content: Text("Ride Saved 🚕"),
+    String rideId = await bookRide();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            RideStatusScreen(
+          rideId: rideId,
         ),
-      );
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Error"),
-          content: Text(e.toString()),
-        ),
-      );
-    }
-  },
-  child: const Text("BOOK RIDE"),
-),
+      ),
+    );
+
+  } catch (e) {
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Error"),
+        content: Text(e.toString()),
+      ),
+    );
+  }
+},
 
           ],
         ),

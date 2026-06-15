@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
@@ -10,12 +11,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  GoogleMapController? mapController;
-
-  static const LatLng initialPosition =
-      LatLng(31.5204, 74.3587); // Lahore default
-
-  LatLng currentPosition = initialPosition;
+  LatLng currentPosition = LatLng(31.5204, 74.3587);
 
   @override
   void initState() {
@@ -24,21 +20,17 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> getUserLocation() async {
-    LocationPermission permission =
-        await Geolocator.requestPermission();
+    await Geolocator.requestPermission();
 
     Position position =
         await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     setState(() {
       currentPosition =
           LatLng(position.latitude, position.longitude);
     });
-
-    mapController?.animateCamera(
-      CameraUpdate.newLatLng(currentPosition),
-    );
   }
 
   @override
@@ -50,28 +42,39 @@ class _MapScreenState extends State<MapScreen> {
       ),
 
       body: FlutterMap(
-  options: MapOptions(
-    initialCenter: LatLng(31.5204, 74.3587),
-    initialZoom: 13,
-  ),
-  children: [
-    TileLayer(
-      urlTemplate:
-          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    ),
-    MarkerLayer(
-      markers: [
-        Marker(
-          point: LatLng(31.5204, 74.3587),
-          width: 50,
-          height: 50,
-          child: const Icon(
-            Icons.location_pin,
-            color: Colors.red,
-            size: 40,
-          ),
+        options: MapOptions(
+          initialCenter: currentPosition,
+          initialZoom: 14,
         ),
-      ],
-    ),
-  ],
-),
+
+        children: [
+          TileLayer(
+            urlTemplate:
+                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          ),
+
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: currentPosition,
+                width: 50,
+                height: 50,
+                child: const Icon(
+                  Icons.location_pin,
+                  color: Colors.red,
+                  size: 40,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
+        onPressed: getUserLocation,
+        child: const Icon(Icons.my_location),
+      ),
+    );
+  }
+}

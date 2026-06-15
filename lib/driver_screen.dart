@@ -2,152 +2,156 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DriverScreen extends StatelessWidget {
-  const DriverScreen({super.key});
+const DriverScreen({super.key});
 
-  Future<void> acceptRide(String rideId) async {
-    await FirebaseFirestore.instance
+Future<void> acceptRide(String rideId) async {
+await FirebaseFirestore.instance
+.collection("rides")
+.doc(rideId)
+.update({
+"status": "accepted",
+"driverId": "driver1",
+});
+}
+
+Future<void> startRide(String rideId) async {
+await FirebaseFirestore.instance
+.collection("rides")
+.doc(rideId)
+.update({
+"status": "started",
+});
+}
+
+Future<void> endRide(String rideId) async {
+await FirebaseFirestore.instance
+.collection("rides")
+.doc(rideId)
+.update({
+"status": "completed",
+"paymentStatus": "paid",
+});
+}
+
+@override
+Widget build(BuildContext context) {
+return Scaffold(
+backgroundColor: Colors.black,
+
+  appBar: AppBar(
+    title: const Text("Driver Panel"),
+    backgroundColor: Colors.orange,
+  ),
+
+  body: StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance
         .collection("rides")
-        .doc(rideId)
-        .update({
-      "status": "accepted",
-      "driverId": "driver1",
-    });
-  }
+        .snapshots(),
 
-  Future<void> startRide(String rideId) async {
-    await FirebaseFirestore.instance
-        .collection("rides")
-        .doc(rideId)
-        .update({
-      "status": "started",
-    });
-  }
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }
 
-  Future<void> endRide(String rideId) async {
-    await FirebaseFirestore.instance
-        .collection("rides")
-        .doc(rideId)
-        .update({
-      "status": "completed",
-      "paymentStatus": "paid",
-    });
-  }
+      var rides = snapshot.data!.docs;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
+      if (rides.isEmpty) {
+        return const Center(
+          child: Text(
+            "No Rides Found",
+            style: TextStyle(color: Colors.white),
+          ),
+        );
+      }
 
-      appBar: AppBar(
-        title: const Text("Driver Panel"),
-        backgroundColor: Colors.orange,
-      ),
+      return ListView.builder(
+        itemCount: rides.length,
 
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection("rides")
-            .snapshots(),
+        itemBuilder: (context, index) {
+          var ride = rides[index];
 
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+          return Card(
+            color: Colors.grey[900],
 
-          var rides = snapshot.data!.docs;
+            child: Padding(
+              padding: const EdgeInsets.all(12),
 
-          if (rides.isEmpty) {
-            return const Center(
-              child: Text(
-                "No Rides Found",
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          }
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
 
-          return ListView.builder(
-            itemCount: rides.length,
+                children: [
 
-            itemBuilder: (context, index) {
-              var ride = rides[index];
+                  Text(
+                    "${ride["pickup"]} → ${ride["drop"]}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
 
-              return Card(
-                color: Colors.grey[900],
+                  const SizedBox(height: 8),
 
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  Text(
+                    "Fare: ${ride["fare"]}",
+                    style: const TextStyle(
+                      color: Colors.orange,
+                    ),
+                  ),
 
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                  const SizedBox(height: 8),
+
+                  Text(
+                    "Status: ${ride["status"]}",
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Wrap(
+                    spacing: 10,
 
                     children: [
 
-                      Text(
-                        "${ride["pickup"]} → ${ride["drop"]}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
+                      if (ride["status"] == "pending")
+                        ElevatedButton(
+                          onPressed: () {
+                            acceptRide(ride.id);
+                          },
+                          child: const Text("Accept"),
                         ),
-                      ),
 
-                      const SizedBox(height: 8),
-
-                      Text(
-                        "Fare: ${ride["fare"]}",
-                        style: const TextStyle(
-                          color: Colors.orange,
+                      if (ride["status"] == "accepted")
+                        ElevatedButton(
+                          onPressed: () {
+                            startRide(ride.id);
+                          },
+                          child: const Text("Start"),
                         ),
-                      ),
 
-                      const SizedBox(height: 8),
-
-                      Text(
-                        "Status: ${ride["status"]}",
-                        style: const TextStyle(
-                          color: Colors.green,
+                      if (ride["status"] == "started")
+                        ElevatedButton(
+                          onPressed: () {
+                            endRide(ride.id);
+                          },
+                          child: const Text("End"),
                         ),
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceEvenly,
-
-                        children: [
-
-                          ElevatedButton(
-                            onPressed: () {
-                              acceptRide(ride.id);
-                            },
-                            child: const Text("Accept"),
-                          ),
-
-                          ElevatedButton(
-                            onPressed: () {
-                              startRide(ride.id);
-                            },
-                            child: const Text("Start"),
-                          ),
-
-                          ElevatedButton(
-                            onPressed: () {
-                              endRide(ride.id);
-                            },
-                            child: const Text("End"),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
-                ),
-              );
-            },
+                ],
+              ),
+            ),
           );
         },
-      ),
-    );
-  }
+      );
+    },
+  ),
+);
+
+}
 }

@@ -49,27 +49,29 @@ class _MapScreenState extends State<MapScreen> {
         backgroundColor: Colors.orange,
       ),
 
-      body: GoogleMap(
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(31.5204, 74.3587),
-          zoom: 14,
+      body: FlutterMap(
+  options: MapOptions(
+    initialCenter: LatLng(31.5204, 74.3587),
+    initialZoom: 13,
+  ),
+  children: [
+    TileLayer(
+      urlTemplate:
+          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    ),
+    MarkerLayer(
+      markers: [
+        Marker(
+          point: LatLng(31.5204, 74.3587),
+          width: 50,
+          height: 50,
+          child: const Icon(
+            Icons.location_pin,
+            color: Colors.red,
+            size: 40,
+          ),
         ),
-
-        onMapCreated: (controller) {
-          mapController = controller;
-        },
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.orange,
-        child: const Icon(Icons.my_location),
-
-        onPressed: () async {
-          await getUserLocation();
-        },
-      ),
-    );
-  }
-}
+      ],
+    ),
+  ],
+),

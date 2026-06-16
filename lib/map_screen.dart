@@ -41,34 +41,58 @@ class _MapScreenState extends State<MapScreen> {
         backgroundColor: Colors.orange,
       ),
 
-      body: FlutterMap(
-        options: MapOptions(
-          initialCenter: currentPosition,
-          initialZoom: 14,
+      body: StreamBuilder<DocumentSnapshot>(
+  stream: FirebaseFirestore.instance
+      .collection("drivers")
+      .doc("driver1")
+      .snapshots(),
+  builder: (context, snapshot) {
+
+    if (!snapshot.hasData) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    var data =
+        snapshot.data!.data() as Map<String, dynamic>;
+
+    LatLng driverPos = LatLng(
+      data["lat"],
+      data["lng"],
+    );
+
+    return FlutterMap(
+      options: MapOptions(
+        initialCenter: driverPos,
+        initialZoom: 15,
+      ),
+      children: [
+
+        TileLayer(
+          urlTemplate:
+              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.moveapp.app',
         ),
 
-        children: [
-          TileLayer(
-  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-  userAgentPackageName: 'com.moveapp.app',
-),
-
-          MarkerLayer(
-            markers: [
-              Marker(
-                point: currentPosition,
-                width: 50,
-                height: 50,
-                child: const Icon(
-                  Icons.location_pin,
-                  color: Colors.red,
-                  size: 40,
-                ),
+        MarkerLayer(
+          markers: [
+            Marker(
+              point: driverPos,
+              width: 60,
+              height: 60,
+              child: const Icon(
+                Icons.directions_car,
+                color: Colors.blue,
+                size: 40,
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
+    );
+  },
+),
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange,

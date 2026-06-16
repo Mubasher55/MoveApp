@@ -1,8 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 
-class DriverScreen extends StatelessWidget {
+class DriverScreen extends StatefulWidget {
 const DriverScreen({super.key});
+
+@override
+State<DriverScreen> createState() => _DriverScreenState();
+}
+
+class _DriverScreenState extends State<DriverScreen> {
+
+@override
+void initState() {
+super.initState();
+startTracking();
+}
+
+void startTracking() {
+Geolocator.getPositionStream(
+locationSettings: const LocationSettings(
+accuracy: LocationAccuracy.high,
+distanceFilter: 10,
+),
+).listen((position) {
+FirebaseFirestore.instance
+.collection("drivers")
+.doc("driver1")
+.set({
+"lat": position.latitude,
+"lng": position.longitude,
+});
+});
+}
 
 Future<void> acceptRide(String rideId) async {
 await FirebaseFirestore.instance
@@ -47,8 +77,8 @@ backgroundColor: Colors.black,
     stream: FirebaseFirestore.instance
         .collection("rides")
         .snapshots(),
-
     builder: (context, snapshot) {
+
       if (!snapshot.hasData) {
         return const Center(
           child: CircularProgressIndicator(),
@@ -68,13 +98,12 @@ backgroundColor: Colors.black,
 
       return ListView.builder(
         itemCount: rides.length,
-
         itemBuilder: (context, index) {
+
           var ride = rides[index];
 
           return Card(
             color: Colors.grey[900],
-
             child: Padding(
               padding: const EdgeInsets.all(12),
 
@@ -115,7 +144,6 @@ backgroundColor: Colors.black,
 
                   Wrap(
                     spacing: 10,
-
                     children: [
 
                       if (ride["status"] == "pending")

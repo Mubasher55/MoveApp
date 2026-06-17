@@ -1,7 +1,8 @@
-import 'dart:async';  // ← ADD THIS IMPORT
+  import 'dart:async';  // ← ALREADY HAVE THIS
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_auth/firebase_auth.dart';  // ← ADD THIS IMPORT
 
 class DriverScreen extends StatefulWidget {
   const DriverScreen({super.key});
@@ -12,11 +13,26 @@ class DriverScreen extends StatefulWidget {
 
 class _DriverScreenState extends State<DriverScreen> {
   StreamSubscription<Position>? _locationSubscription;
+  final FirebaseAuth _auth = FirebaseAuth.instance;  // ← ADD THIS LINE
 
   @override
   void initState() {
     super.initState();
-    startTracking();
+    _checkAuthAndStartTracking();  // ← CHANGE THIS (was startTracking())
+  }
+
+  // ← ADD THIS NEW METHOD
+  void _checkAuthAndStartTracking() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      startTracking();
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please login first')),
+        );
+      }
+    }
   }
 
   @override
@@ -114,6 +130,11 @@ class _DriverScreenState extends State<DriverScreen> {
     }
   }
 
+  // ← ADD THIS METHOD FOR RETRY BUTTON
+  void _retryLoading() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,7 +152,7 @@ class _DriverScreenState extends State<DriverScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
-                Icon(Icons.gps_fixed, color: Colors.green, size: 16), // ← FIXED
+                Icon(Icons.gps_fixed, color: Colors.green, size: 16),
                 SizedBox(width: 8),
                 Text(
                   "Live Tracking Running...",
@@ -147,11 +168,33 @@ class _DriverScreenState extends State<DriverScreen> {
                   .where("status", isEqualTo: "pending")
                   .snapshots(),
               builder: (context, snapshot) {
+                // ← REPLACE THE ENTIRE ERROR HANDLING SECTION
                 if (snapshot.hasError) {
                   return Center(
-                    child: Text(
-                      'Error: ${snapshot.error}',
-                      style: const TextStyle(color: Colors.white),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline, color: Colors.orange, size: 60),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Permission Error',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: Text(
+                            'Please check Firebase security rules or login again',
+                            style: const TextStyle(color: Colors.grey),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: _retryLoading,  // ← ADD THIS
+                          child: const Text('Retry'),
+                        ),
+                      ],
                     ),
                   );
                 }
@@ -276,4 +319,4 @@ class _DriverScreenState extends State<DriverScreen> {
       ),
     );
   }
-}
+}          

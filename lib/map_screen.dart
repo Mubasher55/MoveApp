@@ -45,7 +45,7 @@ class _MapScreenState extends State<MapScreen> {
       body: StreamBuilder<DocumentSnapshot>(
   stream: FirebaseFirestore.instance
       .collection("drivers")
-      .doc("driver1")
+      .doc("cjcXMNawNyN7zzALYcOnO")
       .snapshots(),
   builder: (context, snapshot) {
 

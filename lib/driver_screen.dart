@@ -1,3 +1,4 @@
+import 'dart:async';  // ← ADD THIS IMPORT
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
@@ -48,7 +49,7 @@ class _DriverScreenState extends State<DriverScreen> {
         "lat": position.latitude,
         "lng": position.longitude,
         "status": "online",
-        "updatedAt": FieldValue.serverTimestamp(), // Use server time
+        "updatedAt": FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
     });
   }
@@ -130,7 +131,7 @@ class _DriverScreenState extends State<DriverScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
-                Icon(Icons.gps_active, color: Colors.green, size: 16),
+                Icon(Icons.gps_fixed, color: Colors.green, size: 16), // ← FIXED
                 SizedBox(width: 8),
                 Text(
                   "Live Tracking Running...",

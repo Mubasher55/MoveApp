@@ -1,99 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MapScreen extends StatefulWidget {
+class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
-
-  @override
-  State<MapScreen> createState() => _MapScreenState();
-}
-
-class _MapScreenState extends State<MapScreen> {
-  LatLng currentPosition = LatLng(31.5204, 74.3587);
-
-  @override
-  void initState() {
-    super.initState();
-    getUserLocation();
-  }
-
-  Future<void> getUserLocation() async {
-    await Geolocator.requestPermission();
-
-    Position position =
-        await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    setState(() {
-      currentPosition =
-          LatLng(position.latitude, position.longitude);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Select Location"),
-        backgroundColor: Colors.orange,
-      ),
-
+      appBar: AppBar(title: const Text("Live Map")),
       body: StreamBuilder<DocumentSnapshot>(
-  stream: FirebaseFirestore.instance
-      .collection("drivers")
-      .doc("cjcXMNawNyN7zzALYcOnO")
-      .snapshots(),
-  builder: (context, snapshot) {
+        stream: FirebaseFirestore.instance
+            .collection("drivers")
+            .doc("driver1")
+            .snapshots(),
+        builder: (context, snapshot) {
 
-    if (!snapshot.hasData) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-    var data =
-        snapshot.data!.data() as Map<String, dynamic>;
+          var data = snapshot.data!.data() as Map<String, dynamic>;
 
-    LatLng driverPos = LatLng(
-      data["lat"],
-      data["lng"],
-    );
+          LatLng driverPos = LatLng(
+            (data["lat"] ?? 0).toDouble(),
+            (data["lng"] ?? 0).toDouble(),
+          );
 
-    return FlutterMap(
-      options: MapOptions(
-        initialCenter: driverPos,
-        initialZoom: 15,
-      ),
-      children: [
-
-        TileLayer(
-          urlTemplate:
-              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.moveapp.app',
-        ),
-
-        MarkerLayer(
-          markers: [
-            Marker(
-              point: driverPos,
-              width: 60,
-              height: 60,
-              child: const Icon(
-                Icons.directions_car,
-                color: Colors.blue,
-                size: 40,
-              ),
+          return FlutterMap(
+            options: MapOptions(
+              initialCenter: driverPos,
+              initialZoom: 15,
             ),
-          ],
-        ),
-      ],
+            children: [
+              TileLayer(
+                urlTemplate:
+                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.moveapp.app',
+              ),
+
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: driverPos,
+                    width: 60,
+                    height: 60,
+                    child: const Icon(
+                      Icons.directions_car,
+                      color: Colors.blue,
+                      size: 40,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      ),
     );
-  },
-),
+  }
+}
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange,

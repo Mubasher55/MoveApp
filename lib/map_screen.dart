@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geolocator/geolocator.dart'; // add geolocator to pubspec.yaml
+import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -65,11 +65,12 @@ class _MapScreenState extends State<MapScreen> {
                   initialZoom: 15,
                 ),
                 children: [
-                  // Correct OSM tile URL
-                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                  attribution: '© OpenStreetMap contributors'
-                 }).
+                  TileLayer(
+                    urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.moveapp.app',
+                    additionalOptions: const {
+                      'attribution': '© OpenStreetMap contributors'
+                    },
                   ),
                   MarkerLayer(
                     markers: [

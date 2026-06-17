@@ -65,9 +65,10 @@ class _MapScreenState extends State<MapScreen> {
                   initialZoom: 15,
                 ),
                 children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  // Correct OSM tile URL
+                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  attribution: '© OpenStreetMap contributors'
+                 }).
                     userAgentPackageName: 'com.moveapp.app',
                   ),
                   MarkerLayer(

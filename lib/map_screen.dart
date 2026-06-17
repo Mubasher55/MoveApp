@@ -103,9 +103,11 @@ class _MapScreenState extends State<MapScreen> {
                 bottom: 20,
                 right: 20,
                 child: FloatingActionButton(
-                  onPressed: getUserLocation,
-                  child: const Icon(Icons.my_location),
-                ),
+                onPressed: () {
+               Navigator.pushNamed(context, '/book-ride');
+               },
+              child: const Icon(Icons.add_location),
+              )
               ),
             ],
           );

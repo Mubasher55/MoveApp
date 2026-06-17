@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -11,93 +11,82 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  final MapController _mapController = MapController();
-  LatLng _currentPosition = const LatLng(48.8566, 2.3522); // Paris default
-
-  @override
-  void initState() {
-    super.initState();
-    _getCurrentLocation();
-  }
-
-  Future<void> _getCurrentLocation() async {
-    // Check if location services are enabled
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Optionally show a dialog or snackbar
-      return;
-    }
-
-    // Check permission status
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        return; // permission denied
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are permanently denied, handle appropriately
-      return;
-    }
-
-    // Get current position
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    setState(() {
-      _currentPosition = LatLng(position.latitude, position.longitude);
-    });
-
-    // Move map to that location
-    _animateToCurrent();
-  }
-
-  void _animateToCurrent() {
-    _mapController.move(_currentPosition, 15.0);
-  }
-
-  // This is the function that was missing before – now it's defined
-  void getUserLocation() {
-    _getCurrentLocation();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Map')),
-      body: Stack(
-        children: [
-          FlutterMap(
-            mapController: _mapController,
+      appBar: AppBar(
+        title: const Text("Live Driver Tracking"),
+        backgroundColor: Colors.orange,
+      ),
+
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("drivers")
+            .doc("driver1")
+            .snapshots(),
+
+        builder: (context, snapshot) {
+
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          var data = snapshot.data!.data() as Map<String, dynamic>;
+
+          LatLng driverPos = LatLng(
+            (data["lat"] ?? 0).toDouble(),
+            (data["lng"] ?? 0).toDouble(),
+          );
+
+          return FlutterMap(
             options: MapOptions(
-              initialCenter: _currentPosition,
-              initialZoom: 12,
+              initialCenter: driverPos,
+              initialZoom: 15,
             ),
+
             children: [
+
               TileLayer(
-                urlTemplate: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-                 subdomains: ['a', 'b', 'c'],
-                ),
+                urlTemplate:
+                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.moveapp.app',
+              ),
+
               MarkerLayer(
                 markers: [
+
                   Marker(
-                    point: _currentPosition,
-                    width: 40,
-                    height: 40,
-                    child: const Icon(
-                      Icons.location_on,
-                      color: Colors.red,
-                      size: 40,
+                    point: driverPos,
+                    width: 70,
+                    height: 70,
+                    child: TweenAnimationBuilder(
+                      tween: Tween<double>(begin: 0, end: 1),
+                      duration: const Duration(milliseconds: 500),
+                      builder: (context, value, child) {
+                        return Transform.translate(
+                          offset: Offset(0, -10 * value),
+                          child: const Icon(
+                            Icons.directions_car,
+                            color: Colors.blue,
+                            size: 45,
+                          ),
+                        );
+                      },
                     ),
                   ),
+
                 ],
               ),
             ],
-          ),
+          );
+        },
+      ),
+    );
+  }
+}
           Positioned(
             bottom: 20,
             right: 20,

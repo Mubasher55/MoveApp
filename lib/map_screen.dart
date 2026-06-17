@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -12,7 +12,6 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final MapController _mapController = MapController();
-  final Location _location = Location();
   LatLng _currentPosition = const LatLng(48.8566, 2.3522); // Paris default
 
   @override
@@ -22,30 +21,35 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-
-    // Check if location service is enabled
-    serviceEnabled = await _location.serviceEnabled();
+    // Check if location services are enabled
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      serviceEnabled = await _location.requestService();
-      if (!serviceEnabled) return;
+      // Optionally show a dialog or snackbar
+      return;
     }
 
-    // Check permission
-    permissionGranted = await _location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await _location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) return;
+    // Check permission status
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        return; // permission denied
+      }
     }
 
-    // Get current location
-    final locationData = await _location.getLocation();
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are permanently denied, handle appropriately
+      return;
+    }
+
+    // Get current position
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
     setState(() {
-      _currentPosition = LatLng(
-        locationData.latitude!,
-        locationData.longitude!,
-      );
+      _currentPosition = LatLng(position.latitude, position.longitude);
     });
 
     // Move map to that location
@@ -56,7 +60,7 @@ class _MapScreenState extends State<MapScreen> {
     _mapController.move(_currentPosition, 15.0);
   }
 
-  // This is the missing function – now defined
+  // This is the function that was missing before – now it's defined
   void getUserLocation() {
     _getCurrentLocation();
   }
@@ -98,7 +102,7 @@ class _MapScreenState extends State<MapScreen> {
             bottom: 20,
             right: 20,
             child: FloatingActionButton(
-              onPressed: getUserLocation, // now it exists and works
+              onPressed: getUserLocation,   // works now
               child: const Icon(Icons.my_location),
             ),
           ),

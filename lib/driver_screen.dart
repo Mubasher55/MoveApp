@@ -21,7 +21,7 @@ class _DriverScreenState extends State<DriverScreen> {
     Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
-        distanceFilter: 10,
+        distanceFilter: 5,
       ),
     ).listen((position) {
       FirebaseFirestore.instance
@@ -35,6 +35,24 @@ class _DriverScreenState extends State<DriverScreen> {
       }, SetOptions(merge: true));
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Driver Active"),
+        backgroundColor: Colors.orange,
+      ),
+      body: const Center(
+        child: Text(
+          "Live Tracking Running...",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      backgroundColor: Colors.black,
+    );
+  }
+}
 
   Future<void> acceptRide(String rideId) async {
     await FirebaseFirestore.instance

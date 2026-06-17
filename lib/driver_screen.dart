@@ -10,7 +10,6 @@ class DriverScreen extends StatefulWidget {
 }
 
 class _DriverScreenState extends State<DriverScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -24,10 +23,7 @@ class _DriverScreenState extends State<DriverScreen> {
         distanceFilter: 5,
       ),
     ).listen((position) {
-      FirebaseFirestore.instance
-          .collection("drivers")
-          .doc("driver1")
-          .set({
+      FirebaseFirestore.instance.collection("drivers").doc("driver1").set({
         "lat": position.latitude,
         "lng": position.longitude,
         "status": "online",
@@ -36,48 +32,24 @@ class _DriverScreenState extends State<DriverScreen> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Driver Active"),
-        backgroundColor: Colors.orange,
-      ),
-      body: const Center(
-        child: Text(
-          "Live Tracking Running...",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      backgroundColor: Colors.black,
-    );
-  }
-}
-
+  // ------------------------------------------------
+  // Ride management methods (now inside the state)
+  // ------------------------------------------------
   Future<void> acceptRide(String rideId) async {
-    await FirebaseFirestore.instance
-        .collection("rides")
-        .doc(rideId)
-        .update({
+    await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
       "status": "accepted",
       "driverId": "driver1",
     });
   }
 
   Future<void> startRide(String rideId) async {
-    await FirebaseFirestore.instance
-        .collection("rides")
-        .doc(rideId)
-        .update({
+    await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
       "status": "started",
     });
   }
 
   Future<void> endRide(String rideId) async {
-    await FirebaseFirestore.instance
-        .collection("rides")
-        .doc(rideId)
-        .update({
+    await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
       "status": "completed",
       "paymentStatus": "paid",
     });
@@ -91,92 +63,102 @@ class _DriverScreenState extends State<DriverScreen> {
         title: const Text("Driver Panel"),
         backgroundColor: Colors.orange,
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection("rides")
-            .where("status", isEqualTo: "pending")
-            .snapshots(),
-        builder: (context, snapshot) {
+      body: Column(
+        children: [
+          // Live tracking indicator
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            color: Colors.grey[850],
+            child: const Text(
+              "Live Tracking Running...",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          // List of pending rides
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("rides")
+                  .where("status", isEqualTo: "pending")
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+                var rides = snapshot.data!.docs;
 
-          var rides = snapshot.data!.docs;
+                if (rides.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      "No Rides Found",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                }
 
-          if (rides.isEmpty) {
-            return const Center(
-              child: Text("No Rides Found",
-                  style: TextStyle(color: Colors.white)),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: rides.length,
-            itemBuilder: (context, index) {
-
-              var ride = rides[index];
-
-              return Card(
-                color: Colors.grey[900],
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-                      Text(
-                        "${ride["pickup"]} → ${ride["drop"]}",
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 18),
+                return ListView.builder(
+                  itemCount: rides.length,
+                  itemBuilder: (context, index) {
+                    var ride = rides[index];
+                    return Card(
+                      color: Colors.grey[900],
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${ride["pickup"]} → ${ride["drop"]}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Fare: ${ride["fare"]}",
+                              style: const TextStyle(color: Colors.orange),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Status: ${ride["status"]}",
+                              style: const TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Wrap(
+                              spacing: 10,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () => acceptRide(ride.id),
+                                  child: const Text("Accept"),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => startRide(ride.id),
+                                  child: const Text("Start"),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => endRide(ride.id),
+                                  child: const Text("End"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-
-                      const SizedBox(height: 8),
-
-                      Text(
-                        "Fare: ${ride["fare"]}",
-                        style: const TextStyle(color: Colors.orange),
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      Text(
-                        "Status: ${ride["status"]}",
-                        style: const TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold),
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      Wrap(
-                        spacing: 10,
-                        children: [
-
-                          ElevatedButton(
-                            onPressed: () => acceptRide(ride.id),
-                            child: const Text("Accept"),
-                          ),
-
-                          ElevatedButton(
-                            onPressed: () => startRide(ride.id),
-                            child: const Text("Start"),
-                          ),
-
-                          ElevatedButton(
-                            onPressed: () => endRide(ride.id),
-                            child: const Text("End"),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
-}                  
+}

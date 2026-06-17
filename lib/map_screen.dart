@@ -9,7 +9,10 @@ class MapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Live Map")),
+      appBar: AppBar(
+        title: const Text("Live Driver Tracking"),
+        backgroundColor: Colors.orange,
+      ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
             .collection("drivers")
@@ -18,7 +21,9 @@ class MapScreen extends StatelessWidget {
         builder: (context, snapshot) {
 
           if (!snapshot.hasData || !snapshot.data!.exists) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           var data = snapshot.data!.data() as Map<String, dynamic>;
@@ -34,6 +39,7 @@ class MapScreen extends StatelessWidget {
               initialZoom: 15,
             ),
             children: [
+
               TileLayer(
                 urlTemplate:
                     'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -42,6 +48,7 @@ class MapScreen extends StatelessWidget {
 
               MarkerLayer(
                 markers: [
+
                   Marker(
                     point: driverPos,
                     width: 60,

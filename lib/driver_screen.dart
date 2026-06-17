@@ -1,8 +1,8 @@
-  import 'dart:async';  // ← ALREADY HAVE THIS
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:firebase_auth/firebase_auth.dart';  // ← ADD THIS IMPORT
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DriverScreen extends StatefulWidget {
   const DriverScreen({super.key});
@@ -13,18 +13,19 @@ class DriverScreen extends StatefulWidget {
 
 class _DriverScreenState extends State<DriverScreen> {
   StreamSubscription<Position>? _locationSubscription;
-  final FirebaseAuth _auth = FirebaseAuth.instance;  // ← ADD THIS LINE
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  late String _driverId;  // ← ADD THIS
 
   @override
   void initState() {
     super.initState();
-    _checkAuthAndStartTracking();  // ← CHANGE THIS (was startTracking())
+    _checkAuthAndStartTracking();
   }
 
-  // ← ADD THIS NEW METHOD
   void _checkAuthAndStartTracking() async {
     User? user = _auth.currentUser;
     if (user != null) {
+      _driverId = user.uid;  // ← SET DRIVER ID FROM AUTH
       startTracking();
     } else {
       if (mounted) {
@@ -61,7 +62,8 @@ class _DriverScreenState extends State<DriverScreen> {
         distanceFilter: 5,
       ),
     ).listen((position) {
-      FirebaseFirestore.instance.collection("drivers").doc("driver1").set({
+      // ← USE _driverId INSTEAD OF "driver1"
+      FirebaseFirestore.instance.collection("drivers").doc(_driverId).set({
         "lat": position.latitude,
         "lng": position.longitude,
         "status": "online",
@@ -74,7 +76,7 @@ class _DriverScreenState extends State<DriverScreen> {
     try {
       await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
         "status": "accepted",
-        "driverId": "driver1",
+        "driverId": _driverId,  // ← USE _driverId INSTEAD OF "driver1"
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -89,6 +91,9 @@ class _DriverScreenState extends State<DriverScreen> {
       }
     }
   }
+
+  // ... rest of your code remains the same
+}
 
   Future<void> startRide(String rideId) async {
     try {
@@ -319,4 +324,4 @@ class _DriverScreenState extends State<DriverScreen> {
       ),
     );
   }
-}          
+}

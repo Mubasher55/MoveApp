@@ -1,8 +1,8 @@
-import 'dart:async';
+import 'dart:async';  // ← Required for StreamSubscription
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';  // ← Required
 
 class DriverScreen extends StatefulWidget {
   const DriverScreen({super.key});
@@ -14,7 +14,7 @@ class DriverScreen extends StatefulWidget {
 class _DriverScreenState extends State<DriverScreen> {
   StreamSubscription<Position>? _locationSubscription;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  late String _driverId;  // ← ADD THIS
+  String _driverId = '';
 
   @override
   void initState() {
@@ -22,10 +22,19 @@ class _DriverScreenState extends State<DriverScreen> {
     _checkAuthAndStartTracking();
   }
 
-  void _checkAuthAndStartTracking() async {
-    User? user = _auth.currentUser;
+  @override
+  void dispose() {
+    _locationSubscription?.cancel();
+    super.dispose();
+  }
+
+  // ------------------------------------------------
+  // Check authentication before tracking
+  // ------------------------------------------------
+  void _checkAuthAndStartTracking() {
+    final user = _auth.currentUser;
     if (user != null) {
-      _driverId = user.uid;  // ← SET DRIVER ID FROM AUTH
+      _driverId = user.uid;
       startTracking();
     } else {
       if (mounted) {
@@ -36,12 +45,9 @@ class _DriverScreenState extends State<DriverScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    _locationSubscription?.cancel();
-    super.dispose();
-  }
-
+  // ------------------------------------------------
+  // Start location tracking
+  // ------------------------------------------------
   void startTracking() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -62,7 +68,6 @@ class _DriverScreenState extends State<DriverScreen> {
         distanceFilter: 5,
       ),
     ).listen((position) {
-      // ← USE _driverId INSTEAD OF "driver1"
       FirebaseFirestore.instance.collection("drivers").doc(_driverId).set({
         "lat": position.latitude,
         "lng": position.longitude,
@@ -72,11 +77,14 @@ class _DriverScreenState extends State<DriverScreen> {
     });
   }
 
+  // ------------------------------------------------
+  // Ride management methods
+  // ------------------------------------------------
   Future<void> acceptRide(String rideId) async {
     try {
       await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
         "status": "accepted",
-        "driverId": _driverId,  // ← USE _driverId INSTEAD OF "driver1"
+        "driverId": _driverId,
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -91,9 +99,6 @@ class _DriverScreenState extends State<DriverScreen> {
       }
     }
   }
-
-  // ... rest of your code remains the same
-}
 
   Future<void> startRide(String rideId) async {
     try {
@@ -135,11 +140,16 @@ class _DriverScreenState extends State<DriverScreen> {
     }
   }
 
-  // ← ADD THIS METHOD FOR RETRY BUTTON
+  // ------------------------------------------------
+  // Retry function for error state
+  // ------------------------------------------------
   void _retryLoading() {
     setState(() {});
   }
 
+  // ------------------------------------------------
+  // Build method
+  // ------------------------------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,6 +160,7 @@ class _DriverScreenState extends State<DriverScreen> {
       ),
       body: Column(
         children: [
+          // Live tracking indicator
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
@@ -166,6 +177,7 @@ class _DriverScreenState extends State<DriverScreen> {
               ],
             ),
           ),
+          // List of pending rides
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -173,7 +185,7 @@ class _DriverScreenState extends State<DriverScreen> {
                   .where("status", isEqualTo: "pending")
                   .snapshots(),
               builder: (context, snapshot) {
-                // ← REPLACE THE ENTIRE ERROR HANDLING SECTION
+                // Handle errors
                 if (snapshot.hasError) {
                   return Center(
                     child: Column(
@@ -196,7 +208,7 @@ class _DriverScreenState extends State<DriverScreen> {
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton(
-                          onPressed: _retryLoading,  // ← ADD THIS
+                          onPressed: _retryLoading,
                           child: const Text('Retry'),
                         ),
                       ],

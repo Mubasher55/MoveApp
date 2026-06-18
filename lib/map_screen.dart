@@ -1,9 +1,10 @@
-import 'dart:async';  // If using StreamSubscription
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Added for dynamic driver ID
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -15,8 +16,10 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final MapController _mapController = MapController();
 
+  // Get current user's driver ID (or fallback to "driver1")
+  String get _driverId => FirebaseAuth.instance.currentUser?.uid ?? 'driver1';
+
   Future<void> getUserLocation() async {
-    // Check location permissions and get current position
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -27,7 +30,6 @@ class _MapScreenState extends State<MapScreen> {
       desiredAccuracy: LocationAccuracy.high,
     );
 
-    // Animate map to user's location
     _mapController.move(
       LatLng(position.latitude, position.longitude),
       15,
@@ -44,7 +46,7 @@ class _MapScreenState extends State<MapScreen> {
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
             .collection("drivers")
-            .doc("driver1")
+            .doc(_driverId) // ← Now dynamic (uses logged‑in driver)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData || !snapshot.data!.exists) {
@@ -67,7 +69,8 @@ class _MapScreenState extends State<MapScreen> {
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    urlTemplate:
+                        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.moveapp.app',
                     additionalOptions: const {
                       'attribution': '© OpenStreetMap contributors'
@@ -98,16 +101,16 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                 ],
               ),
-              // FAB overlay
+              // FAB to go to book ride screen
               Positioned(
                 bottom: 20,
                 right: 20,
                 child: FloatingActionButton(
-                onPressed: () {
-               Navigator.pushNamed(context, '/book-ride');
-               },
-              child: const Icon(Icons.add_location),
-              )
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/book-ride');
+                  },
+                  child: const Icon(Icons.add_location),
+                ),
               ),
             ],
           );

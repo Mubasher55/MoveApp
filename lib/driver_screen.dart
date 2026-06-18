@@ -13,24 +13,18 @@ class DriverScreen extends StatefulWidget {
 
 class _DriverScreenState extends State<DriverScreen> {
   StreamSubscription<Position>? _locationSubscription;
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String _driverId = '';
 
   @override
-void _checkAuthAndStartTracking() {
-  final user = _auth.currentUser;
+  void initState() {
+    super.initState();
 
-  if (user != null) {
-    _driverId = user.uid;
-    startTracking();
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Please login first'),
-      ),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAuthAndStartTracking();
+    });
   }
-}
 
   @override
   void dispose() {
@@ -41,26 +35,26 @@ void _checkAuthAndStartTracking() {
   void _checkAuthAndStartTracking() {
     final user = _auth.currentUser;
 
-    if (user != null) {
-      _driverId = user.uid;
-      startTracking();
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please login first')),
+      );
+      return;
     }
+
+    _driverId = user.uid;
+    startTracking();
   }
 
   Future<void> startTracking() async {
-    LocationPermission permission =
-        await Geolocator.checkPermission();
+    LocationPermission permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-
-      if (permission == LocationPermission.denied) {
-        return;
-      }
+      if (permission == LocationPermission.denied) return;
     }
 
-    _locationSubscription =
-        Geolocator.getPositionStream(
+    _locationSubscription = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 5,
@@ -79,29 +73,20 @@ void _checkAuthAndStartTracking() {
   }
 
   Future<void> acceptRide(String rideId) async {
-    await FirebaseFirestore.instance
-        .collection("rides")
-        .doc(rideId)
-        .update({
+    await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
       "status": "accepted",
       "driverId": _driverId,
     });
   }
 
   Future<void> startRide(String rideId) async {
-    await FirebaseFirestore.instance
-        .collection("rides")
-        .doc(rideId)
-        .update({
+    await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
       "status": "started",
     });
   }
 
   Future<void> endRide(String rideId) async {
-    await FirebaseFirestore.instance
-        .collection("rides")
-        .doc(rideId)
-        .update({
+    await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
       "status": "completed",
       "paymentStatus": "paid",
       "completedAt": FieldValue.serverTimestamp(),
@@ -125,10 +110,7 @@ void _checkAuthAndStartTracking() {
             child: const Center(
               child: Text(
                 "Live Tracking Running...",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ),
@@ -141,9 +123,7 @@ void _checkAuthAndStartTracking() {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 final rides = snapshot.data!.docs;
@@ -152,10 +132,7 @@ void _checkAuthAndStartTracking() {
                   return const Center(
                     child: Text(
                       "No Pending Rides",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
+                      style: TextStyle(color: Colors.white),
                     ),
                   );
                 }
@@ -171,8 +148,7 @@ void _checkAuthAndStartTracking() {
                       child: Padding(
                         padding: const EdgeInsets.all(15),
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "${ride["pickup"]} → ${ride["drop"]}",
@@ -187,16 +163,13 @@ void _checkAuthAndStartTracking() {
 
                             Row(
                               children: [
-                                const Icon(
-                                  Icons.money,
-                                  color: Colors.green,
-                                ),
+                                const Icon(Icons.currency_rupee,
+                                    color: Colors.green),
                                 const SizedBox(width: 5),
                                 Text(
                                   "Fare: PKR ${ride["fare"]}",
                                   style: const TextStyle(
                                     color: Colors.green,
-                                    fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -207,9 +180,7 @@ void _checkAuthAndStartTracking() {
 
                             Text(
                               "Status: ${ride["status"]}",
-                              style: const TextStyle(
-                                color: Colors.orange,
-                              ),
+                              style: const TextStyle(color: Colors.orange),
                             ),
 
                             const SizedBox(height: 15),
@@ -218,18 +189,15 @@ void _checkAuthAndStartTracking() {
                               spacing: 10,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () =>
-                                      acceptRide(ride.id),
+                                  onPressed: () => acceptRide(ride.id),
                                   child: const Text("Accept"),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () =>
-                                      startRide(ride.id),
+                                  onPressed: () => startRide(ride.id),
                                   child: const Text("Start"),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () =>
-                                      endRide(ride.id),
+                                  onPressed: () => endRide(ride.id),
                                   child: const Text("End"),
                                 ),
                               ],

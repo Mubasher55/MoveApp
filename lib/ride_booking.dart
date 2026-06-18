@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class BookRideScreen extends StatefulWidget {
-  const BookRideScreen({super.key}); // ← const constructor is here
+  const BookRideScreen({super.key}); // ✅ const constructor
 
   @override
   State<BookRideScreen> createState() => _BookRideScreenState();
@@ -54,6 +54,14 @@ class _BookRideScreenState extends State<BookRideScreen> {
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  @override
+  void dispose() {
+    _pickupController.dispose();
+    _dropController.dispose();
+    _fareController.dispose();
+    super.dispose();
   }
 
   @override

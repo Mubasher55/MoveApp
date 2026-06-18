@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'firebase_options.dart';
-import 'lib/book_ride_screen.dart';      // ← ADD
-import 'lib/driver_screen.dart';         // ← ADD
-import 'lib/map_screen.dart';            // ← ADD
+import 'book_ride_screen.dart';
+import 'driver_screen.dart';
+import 'map_screen.dart';            // ← ADD
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

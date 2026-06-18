@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'book_ride_screen.dart';
+import 'ride_booking_screen.dart';
 import 'driver_screen.dart';
 import 'map_screen.dart';            // ← ADD
 

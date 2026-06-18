@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Move App',
       theme: ThemeData(primarySwatch: Colors.orange),
-      home: const MoveHomeScreen(),
+      home:  MoveHomeScreen(),
     );
   }
 }

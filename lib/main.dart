@@ -2,24 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// Import your screens (adjust file names if needed)
 import 'ride_booking.dart';
 import 'driver_screen.dart';
 import 'map_screen.dart';
-
-// Import Firebase options (must be generated)
-import 'firebase_options.dart';      // ← ADD THIS
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase with platform-specific options
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // 🔴 FOR TESTING ONLY – auto-login anonymously
-  // Remove this line when you have a proper login screen
   await FirebaseAuth.instance.signInAnonymously();
 
   runApp(const MyApp());
@@ -32,12 +26,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MoveApp',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.orange,
         useMaterial3: true,
       ),
-      debugShowCheckedModeBanner: false,
-      home: const HomeScreen(), // Start with the home screen
+
+      home: const HomeScreen(),
+
       routes: {
         '/book-ride': (context) => const BookRideScreen(),
         '/driver': (context) => const DriverScreen(),
@@ -47,7 +43,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// ---------- Home Screen with Navigation Buttons ----------
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -62,31 +57,19 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton.icon(
+            ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/book-ride'),
-              icon: const Icon(Icons.book_online),
-              label: const Text('Book a Ride'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(200, 50),
-              ),
+              child: const Text('Book Ride'),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
+            const SizedBox(height: 10),
+            ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/driver'),
-              icon: const Icon(Icons.directions_car),
-              label: const Text('Driver Panel'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(200, 50),
-              ),
+              child: const Text('Driver Panel'),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
+            const SizedBox(height: 10),
+            ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/map'),
-              icon: const Icon(Icons.map),
-              label: const Text('Live Map'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(200, 50),
-              ),
+              child: const Text('Live Map'),
             ),
           ],
         ),

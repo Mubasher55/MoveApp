@@ -31,7 +31,8 @@ class _BookRideScreenState extends State<BookRideScreen> {
       await FirebaseFirestore.instance.collection("rides").add({
         "pickup": _pickupController.text,
         "drop": _dropController.text,
-        "fare": int.parse(_fareController.text),
+        "fare": double.parse(_fareController.text),
+        "currency": "PKR",
         "status": "pending",
         "userId": FirebaseAuth.instance.currentUser?.uid ?? 'anonymous',
         "createdAt": FieldValue.serverTimestamp(),
@@ -97,7 +98,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
               controller: _fareController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Fare (PKR)',
+                labelText: 'Fare (Rs.)',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.currency_rupees),
               ),

@@ -53,7 +53,10 @@ class MoveHomeScreen extends StatelessWidget {
 
                   const Text(
                     "Ride • Delivery • Wallet",
-                    style: TextStyle(color: Colors.white70, fontSize: 18),
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 18,
+                    ),
                   ),
 
                   const SizedBox(height: 40),
@@ -94,7 +97,7 @@ class MoveHomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => BookRideScreen(),
+                                  builder: (_) => const BookRideScreen(),
                                 ),
                               );
                             },
@@ -111,7 +114,7 @@ class MoveHomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => MapScreen(),
+                                  builder: (_) => const MapScreen(),
                                 ),
                               );
                             },
@@ -128,7 +131,7 @@ class MoveHomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => DriverScreen(),
+                                  builder: (_) => const DriverScreen(),
                                 ),
                               );
                             },

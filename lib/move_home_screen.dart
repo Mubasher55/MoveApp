@@ -1,5 +1,5 @@
 class MoveHomeScreen extends StatelessWidget {
-  const MoveHomeScreen({super.key});
+  MoveHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

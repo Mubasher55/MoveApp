@@ -4,18 +4,6 @@ import 'map_screen.dart';
 import 'driver_screen.dart';
 
 class MoveHomeScreen extends StatelessWidget {
-  const MoveHomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text("Move App"),
-      ),
-    );
-  }
-}
-class MoveHomeScreen extends StatelessWidget {
   MoveHomeScreen({super.key});
 
   @override

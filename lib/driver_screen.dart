@@ -263,17 +263,20 @@ class _DriverScreenState extends State<DriverScreen> {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(Icons.currency_rupee, color: Colors.orange, size: 16),
-                                const SizedBox(width: 4),
-                                Text(
-                                  "Fare: ₹${ride["fare"]}",
-                                  style: const TextStyle(
-                                    color: Colors.orange,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
+                                const Icon(Icons.money,
+  color: Colors.green,
+  size: 16,
+),
+const SizedBox(width: 4),
+Text(
+  "Fare: PKR ${ride["fare"]}",
+  style: const TextStyle(
+    color: Colors.green,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  ),
+),
+   
                             const SizedBox(height: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),

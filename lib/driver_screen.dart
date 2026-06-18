@@ -261,29 +261,31 @@ class _DriverScreenState extends State<DriverScreen> {
                               ],
                             ),
                             const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                const Icon(Icons.money,
-  color: Colors.green,
-  size: 16,
-),
-const SizedBox(width: 4),
-Text(
-  "Fare: PKR ${ride["fare"]}",
-  style: const TextStyle(
-    color: Colors.green,
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
-  ),
-),
-   
+                           
                             const SizedBox(height: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                               decoration: BoxDecoration(
                                 color: Colors.green.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(12),
-                              ),
+        Row(
+  children: [
+    const Icon(
+      Icons.money,
+      color: Colors.green,
+      size: 16,
+    ),
+    const SizedBox(width: 4),
+    Text(
+      "Fare: PKR ${ride["fare"]}",
+      style: const TextStyle(
+        color: Colors.green,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+),                      ),
                               child: Text(
                                 "Status: ${ride["status"]}",
                                 style: const TextStyle(

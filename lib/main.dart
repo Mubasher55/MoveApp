@@ -3,19 +3,21 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'move_home_screen.dart';
-import 'ride_booking.dart';
-import 'driver_screen.dart';
-import 'map_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  await FirebaseAuth.instance.signInAnonymously();
+    await FirebaseAuth.instance.signInAnonymously();
+  } catch (e) {
+    // Agar Firebase fail ho jaye to app crash na ho
+    debugPrint("Firebase Error: $e");
+  }
 
   runApp(const MyApp());
 }
@@ -28,8 +30,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Move App',
-      theme: ThemeData(primarySwatch: Colors.orange),
-      home:  MoveHomeScreen(),
+
+      // 👉 START SCREEN
+      home: const MoveHomeScreen(),
+
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
+        useMaterial3: true,
+      ),
     );
   }
 }

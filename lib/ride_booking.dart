@@ -100,7 +100,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
               decoration: const InputDecoration(
                 labelText: 'Fare (Rs.)',
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.currency_rupees),
+                prefixIcon: Icon(Icons.currency_rupee),
               ),
             ),
             const SizedBox(height: 24),

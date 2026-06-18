@@ -4,7 +4,7 @@ import 'map_screen.dart';
 import 'driver_screen.dart';
 
 class MoveHomeScreen extends StatelessWidget {
-  MoveHomeScreen({super.key});
+  const MoveHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,6 @@ class MoveHomeScreen extends StatelessWidget {
 
                         const SizedBox(height: 30),
 
-                        // BOOK RIDE
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -95,7 +94,8 @@ class MoveHomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const BookRideScreen(),
+                                  builder: (context) =>
+                                      const BookRideScreen(),
                                 ),
                               );
                             },
@@ -105,7 +105,6 @@ class MoveHomeScreen extends StatelessWidget {
 
                         const SizedBox(height: 15),
 
-                        // MAP
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -113,7 +112,8 @@ class MoveHomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const MapScreen(),
+                                  builder: (context) =>
+                                      const MapScreen(),
                                 ),
                               );
                             },
@@ -123,7 +123,6 @@ class MoveHomeScreen extends StatelessWidget {
 
                         const SizedBox(height: 15),
 
-                        // DRIVER
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -131,7 +130,8 @@ class MoveHomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const DriverScreen(),
+                                  builder: (context) =>
+                                      const DriverScreen(),
                                 ),
                               );
                             },

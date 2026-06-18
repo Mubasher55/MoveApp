@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'ride_booking_screen.dart';
+
+// Import your screens (adjust file names if needed)
+import 'ride_booking_screen.dart';   // contains BookRideScreen
 import 'driver_screen.dart';
-import 'map_screen.dart';            // ← ADD
+import 'map_screen.dart';
+
+// Import Firebase options (must be generated)
+import 'firebase_options.dart';      // ← ADD THIS
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase with platform-specific options
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // 🔴 FOR TESTING ONLY – auto-login anonymously
+  // Remove this line when you have a proper login screen
+  await FirebaseAuth.instance.signInAnonymously();
+
   runApp(const MyApp());
 }
 
@@ -25,7 +37,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),  // ← Create this or use BookRideScreen
+      home: const HomeScreen(), // Start with the home screen
       routes: {
         '/book-ride': (context) => const BookRideScreen(),
         '/driver': (context) => const DriverScreen(),
@@ -35,7 +47,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Optional: Home Screen with navigation
+// ---------- Home Screen with Navigation Buttons ----------
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 

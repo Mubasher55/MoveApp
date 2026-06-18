@@ -17,10 +17,20 @@ class _DriverScreenState extends State<DriverScreen> {
   String _driverId = '';
 
   @override
-  void initState() {
-    super.initState();
-    _checkAuthAndStartTracking();
+void _checkAuthAndStartTracking() {
+  final user = _auth.currentUser;
+
+  if (user != null) {
+    _driverId = user.uid;
+    startTracking();
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Please login first'),
+      ),
+    );
   }
+}
 
   @override
   void dispose() {

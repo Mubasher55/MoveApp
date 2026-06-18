@@ -94,8 +94,7 @@ class MoveHomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const BookRideScreen(),
+                                  builder: (_) => BookRideScreen(),
                                 ),
                               );
                             },
@@ -112,8 +111,7 @@ class MoveHomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MapScreen(),
+                                  builder: (_) => MapScreen(),
                                 ),
                               );
                             },
@@ -130,8 +128,7 @@ class MoveHomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const DriverScreen(),
+                                  builder: (_) => DriverScreen(),
                                 ),
                               );
                             },

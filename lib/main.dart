@@ -28,32 +28,43 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         useMaterial3: true,
       ),
-      home: const AuthWrapper(), // 🔥 MAIN FIX HERE
+      home: const SplashRouter(),
     );
   }
 }
 
-class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({super.key});
+/// ✅ SAFE ROUTER (FIX BLACK SCREEN ISSUE)
+class SplashRouter extends StatelessWidget {
+  const SplashRouter({super.key});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        // loading state
+
+        // 🔵 LOADING SCREEN (IMPORTANT)
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // user logged in
+        // 🔴 ERROR SAFE CHECK
+        if (snapshot.hasError) {
+          return const Scaffold(
+            body: Center(
+              child: Text("Something went wrong"),
+            ),
+          );
+        }
+
+        // 🟢 LOGGED IN
         if (snapshot.hasData) {
           return const MoveHomeScreen();
         }
 
-        // not logged in
+        // 🟡 NOT LOGGED IN
         return const LoginScreen();
       },
     );

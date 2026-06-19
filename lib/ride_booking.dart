@@ -98,7 +98,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
               controller: _fareController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Fare (Rs.)',
+                labelText: 'Fare (PKR)',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.attach_money),
               ),

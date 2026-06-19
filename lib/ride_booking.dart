@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class BookRideScreen extends StatefulWidget {
-  const BookRideScreen({super.key}); // ✅ const constructor
+  const BookRideScreen({super.key});
 
   @override
   State<BookRideScreen> createState() => _BookRideScreenState();
@@ -16,6 +16,17 @@ class _BookRideScreenState extends State<BookRideScreen> {
   bool _isLoading = false;
 
   Future<void> _bookRide() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    // ✅ LOGIN CHECK
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please login first")),
+      );
+      return;
+    }
+
+    // ✅ FIELD CHECK
     if (_pickupController.text.isEmpty ||
         _dropController.text.isEmpty ||
         _fareController.text.isEmpty) {
@@ -29,12 +40,12 @@ class _BookRideScreenState extends State<BookRideScreen> {
 
     try {
       await FirebaseFirestore.instance.collection("rides").add({
-        "pickup": _pickupController.text,
-        "drop": _dropController.text,
-        "fare": double.parse(_fareController.text),
+        "pickup": _pickupController.text.trim(),
+        "drop": _dropController.text.trim(),
+        "fare": double.parse(_fareController.text.trim()),
         "currency": "PKR",
         "status": "pending",
-        "userId": FirebaseAuth.instance.currentUser?.uid ?? 'anonymous',
+        "userId": user.uid, // ✅ MUST (fix permission error)
         "createdAt": FieldValue.serverTimestamp(),
       });
 
@@ -42,6 +53,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Ride Booked Successfully! 🎉')),
         );
+
         _pickupController.clear();
         _dropController.clear();
         _fareController.clear();

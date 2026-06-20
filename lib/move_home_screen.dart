@@ -16,11 +16,6 @@ class MoveHomeScreen extends StatelessWidget {
         // ✅ SAFE BACKGROUND (no crash if image missing)
         decoration: BoxDecoration(
           color: Colors.black,
-          image: const DecorationImage(
-            image: AssetImage("assets/bg.jpg"),
-            fit: BoxFit.cover,
-            onError: null,
-          ),
         ),
 
         child: SafeArea(

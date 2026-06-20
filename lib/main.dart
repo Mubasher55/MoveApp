@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'firebase_options.dart';
-import 'move_home_screen.dart';
 import 'login_screen.dart';
+import 'move_home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,21 +21,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Move App',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        useMaterial3: true,
-      ),
-      home: const SplashRouter(),
+      home: AuthGate(),
     );
   }
 }
 
-/// ✅ SAFE ROUTER (FIX BLACK SCREEN ISSUE)
-class SplashRouter extends StatelessWidget {
-  const SplashRouter({super.key});
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,28 +37,16 @@ class SplashRouter extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
 
-        // 🔵 LOADING SCREEN (IMPORTANT)
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // 🔴 ERROR SAFE CHECK
-        if (snapshot.hasError) {
-          return const Scaffold(
-            body: Center(
-              child: Text("Something went wrong"),
-            ),
-          );
-        }
-
-        // 🟢 LOGGED IN
         if (snapshot.hasData) {
           return const MoveHomeScreen();
         }
 
-        // 🟡 NOT LOGGED IN
         return const LoginScreen();
       },
     );

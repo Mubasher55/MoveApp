@@ -163,8 +163,9 @@ class _DriverScreenState extends State<DriverScreen> {
 
                             Row(
                               children: [
-                                const Icon(Icons.currency_rupee,
-                                    color: Colors.green),
+                                const Icon(  Icons.money,
+                                  color: Colors.green,
+                                  ),
                                 const SizedBox(width: 5),
                                 Text(
                                   "Fare: PKR ${ride["fare"]}",

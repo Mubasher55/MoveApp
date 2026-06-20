@@ -21,13 +21,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthGate(),
+      title: 'Move App',
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
+        useMaterial3: true,
+      ),
+      home: const AuthGate(),
     );
   }
 }
 
+/// 🔥 FIX BLACK SCREEN ROOT SOLUTION
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 

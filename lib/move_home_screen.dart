@@ -12,12 +12,17 @@ class MoveHomeScreen extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
+
+        // ✅ SAFE BACKGROUND (no crash if image missing)
+        decoration: BoxDecoration(
+          color: Colors.black,
+          image: const DecorationImage(
             image: AssetImage("assets/bg.jpg"),
             fit: BoxFit.cover,
+            onError: null,
           ),
         ),
+
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -29,7 +34,7 @@ class MoveHomeScreen extends StatelessWidget {
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(Icons.menu, color: Colors.black, size: 30),
+                      Icon(Icons.menu, color: Colors.white, size: 30),
                       CircleAvatar(
                         radius: 22,
                         backgroundColor: Colors.white,
@@ -53,10 +58,7 @@ class MoveHomeScreen extends StatelessWidget {
 
                   const Text(
                     "Ride • Delivery • Wallet",
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 18,
-                    ),
+                    style: TextStyle(color: Colors.white70, fontSize: 18),
                   ),
 
                   const SizedBox(height: 40),

@@ -127,6 +127,104 @@ class MoveHomeScreen extends StatelessWidget {
                         child: const Text("🚖 Driver Panel"),
                       ),
                     ),
+                    const SizedBox(height: 30),
+const Align(
+  alignment: Alignment.centerLeft,
+  child: Text(
+    "Services",
+    style: TextStyle(
+      color: Colors.white,
+      fontSize: 22,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
+
+const SizedBox(height: 15),
+
+GridView.count(
+  crossAxisCount: 2,
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  crossAxisSpacing: 15,
+  mainAxisSpacing: 15,
+  childAspectRatio: 1.2,
+  children: [
+
+    serviceCard(
+      context,
+      Icons.local_taxi,
+      "Taxi",
+      Colors.orange,
+      const BookRideScreen(),
+    ),
+
+    serviceCard(
+      context,
+      Icons.map,
+      "Map",
+      Colors.blue,
+      const MapScreen(),
+    ),
+
+    serviceCard(
+      context,
+      Icons.person,
+      "Driver",
+      Colors.red,
+      const DriverScreen(),
+    ),
+
+    serviceCard(
+      context,
+      Icons.account_balance_wallet,
+      "Wallet",
+      Colors.green,
+      const WalletScreen(),
+    ),
+  ],
+),
+                    Widget serviceCard(
+  BuildContext context,
+  IconData icon,
+  String title,
+  Color color,
+  Widget page,
+) {
+  return InkWell(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => page),
+      );
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.grey.shade800,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: 42,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+                    }
                   ],
                 ),
               ),

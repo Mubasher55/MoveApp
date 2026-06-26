@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'ride_booking.dart';
 import 'map_screen.dart';
 import 'driver_screen.dart';
+import 'wallet_screen.dart';
 
 class MoveHomeScreen extends StatelessWidget {
   const MoveHomeScreen({super.key});

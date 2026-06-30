@@ -70,31 +70,42 @@ Container(
   child: Column(
     children: [
       TextField(
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.my_location, color: Colors.green),
-          hintText: "Pickup Location",
-          filled: true,
-          fillColor: Colors.black,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-      ),
+  style: const TextStyle(color: Colors.white),
+  decoration: InputDecoration(
+    prefixIcon: const Icon(Icons.my_location, color: Colors.green),
+    hintText: "Pickup Location",
+    hintStyle: const TextStyle(color: Colors.white54),
+    filled: true,
+    fillColor: Colors.black,
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: const BorderSide(color: Colors.white24),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: const BorderSide(color: Colors.orange),
+    ),
+  ),
+),
 
       const SizedBox(height: 15),
 
       TextField(
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.location_on, color: Colors.red),
-          hintText: "Drop Location",
-          filled: true,
-          fillColor: Colors.black,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-      ),
-    ],
+  style: const TextStyle(color: Colors.white),
+  decoration: InputDecoration(
+    prefixIcon: const Icon(Icons.location_on, color: Colors.red),
+    hintText: "Drop Location",
+    hintStyle: const TextStyle(color: Colors.white54),
+    filled: true,
+    fillColor: Colors.black,
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: const BorderSide(color: Colors.white24),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: const BorderSide(color: Colors.orange),
+    ),
   ),
 ),
 const SizedBox(height: 20),

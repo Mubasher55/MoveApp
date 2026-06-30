@@ -20,7 +20,10 @@ class MoveHomeScreen extends StatelessWidget {
         centerTitle: true,
         title: const Text(
           "MOVE APP",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
 
@@ -53,62 +56,117 @@ class MoveHomeScreen extends StatelessWidget {
               const SizedBox(height: 10),
 
               const Text(
-                "Ride • Delivery • Wallet",
+                "Ride • Delivery • Cargo • Wallet",
                 style: TextStyle(
                   color: Colors.white70,
                   fontSize: 18,
                 ),
               ),
 
- const SizedBox(height: 30),
-Container(
-  padding: const EdgeInsets.all(15),
-  decoration: BoxDecoration(
-    color: Colors.grey.shade900,
-    borderRadius: BorderRadius.circular(20),
-  ),
-  child: Column(
-    children: [
-      TextField(
-  style: const TextStyle(color: Colors.white),
-  decoration: InputDecoration(
-    prefixIcon: const Icon(Icons.my_location, color: Colors.green),
-    hintText: "Pickup Location",
-    hintStyle: const TextStyle(color: Colors.white54),
-    filled: true,
-    fillColor: Colors.black,
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(15),
-      borderSide: const BorderSide(color: Colors.white24),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(15),
-      borderSide: const BorderSide(color: Colors.orange),
-    ),
-  ),
-),
+              const SizedBox(height: 30),
 
-      const SizedBox(height: 15),
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade900,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  children: [
 
-      TextField(
-  style: const TextStyle(color: Colors.white),
-  decoration: InputDecoration(
-    prefixIcon: const Icon(Icons.location_on, color: Colors.red),
-    hintText: "Drop Location",
-    hintStyle: const TextStyle(color: Colors.white54),
-    filled: true,
-    fillColor: Colors.black,
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(15),
-      borderSide: const BorderSide(color: Colors.white24),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(15),
-      borderSide: const BorderSide(color: Colors.orange),
-    ),
-  ),
-),
-const SizedBox(height: 20),
+                    TextField(
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          Icons.my_location,
+                          color: Colors.green,
+                        ),
+                        hintText: "Pickup Location",
+                        hintStyle:
+                            const TextStyle(color: Colors.white54),
+                        filled: true,
+                        fillColor: Colors.black,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: Colors.white24,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    TextField(
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          Icons.location_on,
+                          color: Colors.red,
+                        ),
+                        hintText: "Drop Location",
+                        hintStyle:
+                            const TextStyle(color: Colors.white54),
+                        filled: true,
+                        fillColor: Colors.black,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: Colors.white24,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          minimumSize: const Size(
+                            double.infinity,
+                            50,
+                          ),
+                        ),
+                        icon: const Icon(Icons.local_taxi),
+                        label: const Text(
+                          "Book Ride",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  const BookRideScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 25),
 
               Container(
                 width: double.infinity,
@@ -144,16 +202,19 @@ const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        icon: const Icon(Icons.local_taxi),
-                        label: const Text("Book Ride"),
+                        icon: const Icon(
+                          Icons.account_balance_wallet,
+                        ),
+                        label: const Text("Open Wallet"),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
+                          backgroundColor: Colors.green,
                         ),
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const BookRideScreen(),
+                              builder: (_) =>
+                                  const WalletScreen(),
                             ),
                           );
                         },
@@ -175,14 +236,13 @@ const SizedBox(height: 20),
               ),
 
               const SizedBox(height: 15),
-
-              GridView.count(
+                            GridView.count(
                 crossAxisCount: 2,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
-                childAspectRatio: 1.1,
+                childAspectRatio: 1.05,
                 children: [
 
                   serviceCard(
@@ -195,10 +255,18 @@ const SizedBox(height: 20),
 
                   serviceCard(
                     context,
-                    Icons.map,
-                    "Map",
+                    Icons.delivery_dining,
+                    "Delivery",
+                    Colors.green,
+                    const DeliveryScreen(),
+                  ),
+
+                  serviceCard(
+                    context,
+                    Icons.local_shipping,
+                    "Cargo",
                     Colors.blue,
-                    const MapScreen(),
+                    const CargoScreen(),
                   ),
 
                   serviceCard(
@@ -211,9 +279,17 @@ const SizedBox(height: 20),
 
                   serviceCard(
                     context,
+                    Icons.map,
+                    "Map",
+                    Colors.purple,
+                    const MapScreen(),
+                  ),
+
+                  serviceCard(
+                    context,
                     Icons.account_balance_wallet,
                     "Wallet",
-                    Colors.green,
+                    Colors.teal,
                     const WalletScreen(),
                   ),
                 ],
@@ -237,7 +313,9 @@ const SizedBox(height: 20),
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => page),
+          MaterialPageRoute(
+            builder: (_) => page,
+          ),
         );
       },
       child: Container(
@@ -251,7 +329,7 @@ const SizedBox(height: 20),
 
             CircleAvatar(
               radius: 30,
-              backgroundColor: color.withOpacity(0.15),
+              backgroundColor: color.withOpacity(0.2),
               child: Icon(
                 icon,
                 color: color,
@@ -259,7 +337,7 @@ const SizedBox(height: 20),
               ),
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 12),
 
             Text(
               title,

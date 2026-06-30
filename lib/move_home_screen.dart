@@ -3,6 +3,8 @@ import 'ride_booking.dart';
 import 'map_screen.dart';
 import 'driver_screen.dart';
 import 'wallet_screen.dart';
+import 'delivery_screen.dart';
+import 'cargo_screen.dart';
 
 class MoveHomeScreen extends StatelessWidget {
   const MoveHomeScreen({super.key});

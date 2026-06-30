@@ -258,7 +258,7 @@ class MoveHomeScreen extends StatelessWidget {
                     Icons.delivery_dining,
                     "Delivery",
                     Colors.green,
-                    const DeliveryScreen(),
+                    DeliveryScreen(),
                   ),
 
                   serviceCard(
@@ -266,7 +266,7 @@ class MoveHomeScreen extends StatelessWidget {
                     Icons.local_shipping,
                     "Cargo",
                     Colors.blue,
-                    const CargoScreen(),
+                    CargoScreen(),
                   ),
 
                   serviceCard(

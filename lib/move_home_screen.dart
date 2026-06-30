@@ -61,47 +61,45 @@ class MoveHomeScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 30),
-              Column(
-  children: [
 
-    Container(
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade900,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-
-          TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.my_location,color: Colors.green),
-              hintText: "Pickup Location",
-              filled: true,
-              fillColor: Colors.black,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
+Container(
+  padding: const EdgeInsets.all(15),
+  decoration: BoxDecoration(
+    color: Colors.grey.shade900,
+    borderRadius: BorderRadius.circular(20),
+  ),
+  child: Column(
+    children: [
+      TextField(
+        decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.my_location, color: Colors.green),
+          hintText: "Pickup Location",
+          filled: true,
+          fillColor: Colors.black,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
           ),
-
-          const SizedBox(height:15),
-
-          TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.location_on,color: Colors.red),
-              hintText: "Drop Location",
-              filled: true,
-              fillColor: Colors.black,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-          ),
-
-        ],
+        ),
       ),
-    ),
+
+      const SizedBox(height: 15),
+
+      TextField(
+        decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.location_on, color: Colors.red),
+          hintText: "Drop Location",
+          filled: true,
+          fillColor: Colors.black,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
+const SizedBox(height: 20),
 
               Container(
                 width: double.infinity,

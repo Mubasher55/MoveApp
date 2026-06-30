@@ -60,8 +60,7 @@ class MoveHomeScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 30),
-
+ const SizedBox(height: 30),
 Container(
   padding: const EdgeInsets.all(15),
   decoration: BoxDecoration(
@@ -98,7 +97,6 @@ Container(
     ],
   ),
 ),
-
 const SizedBox(height: 20),
 
               Container(

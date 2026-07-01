@@ -1,44 +1,33 @@
 import 'package:flutter/material.dart';
 
 class CargoScreen extends StatelessWidget {
+  const CargoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.black,
-
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text("Cargo Truck"),
+        title: const Text("Cargo Truck"),
       ),
-
       body: Padding(
-        padding: EdgeInsets.all(20),
-
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-
             buildField("Pickup City"),
-            SizedBox(height: 20),
-
+            const SizedBox(height: 20),
             buildField("Destination City"),
-            SizedBox(height: 20),
-
+            const SizedBox(height: 20),
             buildField("Load Weight"),
-
-            SizedBox(height: 30),
-
+            const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {},
-
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
               ),
-
-              child: Text("Find Truck"),
+              child: const Text("Find Truck"),
             ),
-
           ],
         ),
       ),
@@ -46,7 +35,6 @@ class CargoScreen extends StatelessWidget {
   }
 
   Widget buildField(String hint) {
-
     return TextField(
       decoration: InputDecoration(
         hintText: hint,

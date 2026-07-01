@@ -14,59 +14,66 @@ class _BookRideScreenState extends State<BookRideScreen> {
   final TextEditingController _pickupController = TextEditingController();
   final TextEditingController _dropController = TextEditingController();
   final TextEditingController _fareController = TextEditingController();
+
   bool _isLoading = false;
 
   Future<void> _bookRide() async {
     final user = FirebaseAuth.instance.currentUser;
 
-    // ✅ LOGIN CHECK
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please login first")),
+        const SnackBar(content: Text("Please Login First")),
       );
       return;
     }
 
-    // ✅ FIELD CHECK
     if (_pickupController.text.isEmpty ||
         _dropController.text.isEmpty ||
         _fareController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
+        const SnackBar(content: Text("Please fill all fields")),
       );
       return;
     }
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+    });
 
     try {
-      await FirebaseFirestore.instance.collection("rides").add({
+      DocumentReference rideRef =
+          await FirebaseFirestore.instance.collection("rides").add({
         "pickup": _pickupController.text.trim(),
         "drop": _dropController.text.trim(),
         "fare": double.parse(_fareController.text.trim()),
         "currency": "PKR",
-        "status": "pending",
-        "userId": user.uid, // ✅ MUST (fix permission error)
+        "status": "Searching Driver",
+        "driver": "",
+        "carType": "Car",
+        "userId": user.uid,
         "createdAt": FieldValue.serverTimestamp(),
       });
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ride Booked Successfully! 🎉')),
-        );
+      if (!mounted) return;
 
-        _pickupController.clear();
-        _dropController.clear();
-        _fareController.clear();
-      }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RideStatusScreen(
+            rideId: rideRef.id,
+          ),
+        ),
+      );
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -78,58 +85,82 @@ class _BookRideScreenState extends State<BookRideScreen> {
     super.dispose();
   }
 
+  Widget buildField(
+    TextEditingController controller,
+    String hint,
+    IconData icon,
+  ) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon),
+        labelText: hint,
+        border: const OutlineInputBorder(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Book Ride'),
+        title: const Text("Book Ride"),
         backgroundColor: Colors.orange,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            TextField(
-              controller: _pickupController,
-              decoration: const InputDecoration(
-                labelText: 'Pickup Location',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.location_on),
-              ),
+
+            buildField(
+              _pickupController,
+              "Pickup Location",
+              Icons.my_location,
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _dropController,
-              decoration: const InputDecoration(
-                labelText: 'Drop Location',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.flag),
-              ),
+
+            const SizedBox(height: 20),
+
+            buildField(
+              _dropController,
+              "Drop Location",
+              Icons.location_on,
             ),
-            const SizedBox(height: 16),
+
+            const SizedBox(height: 20),
+
             TextField(
               controller: _fareController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Fare (PKR)',
+                prefixIcon: Icon(Icons.currency_rupee),
+                labelText: "Offer Fare",
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.attach_money),
               ),
             ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _isLoading ? null : _bookRide,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                backgroundColor: Colors.orange,
+
+            const SizedBox(height: 30),
+
+            SizedBox(
+              width: double.infinity,
+              height: 55,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                ),
+                onPressed: _isLoading ? null : _bookRide,
+                child: _isLoading
+                    ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      )
+                    : const Text(
+                        "BOOK RIDE",
+                        style: TextStyle(fontSize: 18),
+                      ),
               ),
-              child: _isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('BOOK RIDE', style: TextStyle(fontSize: 18)),
             ),
           ],
         ),
       ),
     );
   }
-}
+}                

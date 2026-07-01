@@ -158,25 +158,91 @@ class _DriverScreenState extends State<DriverScreen> {
         backgroundColor: Colors.orange,
       ),
 
-      body: Column(
+  body: Column(
+  children: [
+
+    Container(
+      padding: const EdgeInsets.all(15),
+      color: Colors.grey.shade900,
+      child: Row(
         children: [
 
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(15),
-            color: Colors.grey.shade900,
-            child: const Center(
-              child: Text(
-                "🟢 Driver Online - Live Tracking Running",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+          const CircleAvatar(
+            radius: 25,
+            backgroundColor: Colors.green,
+            child: Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+          ),
+
+          const SizedBox(width: 15),
+
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                Text(
+                  "Driver Online",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
+
+                SizedBox(height: 4),
+
+                Text(
+                  "Live Tracking Enabled",
+                  style: TextStyle(
+                    color: Colors.white70,
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 8,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Text(
+              "ONLINE",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
 
-          Expanded(
+        ],
+      ),
+    ),
+
+    Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      color: Colors.orange.shade700,
+      child: const Center(
+        child: Text(
+          "Waiting for New Ride Requests...",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ),
+
+    Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection("rides")

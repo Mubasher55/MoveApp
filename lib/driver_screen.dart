@@ -37,7 +37,9 @@ class _DriverScreenState extends State<DriverScreen> {
 
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please login first')),
+        const SnackBar(
+          content: Text("Please Login First"),
+        ),
       );
       return;
     }
@@ -47,70 +49,129 @@ class _DriverScreenState extends State<DriverScreen> {
   }
 
   Future<void> startTracking() async {
-    LocationPermission permission = await Geolocator.checkPermission();
+    LocationPermission permission =
+        await Geolocator.checkPermission();
 
     if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) return;
+      permission =
+          await Geolocator.requestPermission();
+
+      if (permission == LocationPermission.denied) {
+        return;
+      }
     }
 
-    _locationSubscription = Geolocator.getPositionStream(
+    _locationSubscription =
+        Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 5,
       ),
     ).listen((position) {
+
       FirebaseFirestore.instance
           .collection("drivers")
           .doc(_driverId)
           .set({
+
         "lat": position.latitude,
         "lng": position.longitude,
         "status": "online",
         "updatedAt": FieldValue.serverTimestamp(),
+
       }, SetOptions(merge: true));
     });
   }
 
   Future<void> acceptRide(String rideId) async {
-    await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
+
+    await FirebaseFirestore.instance
+        .collection("rides")
+        .doc(rideId)
+        .update({
+
       "status": "accepted",
       "driverId": _driverId,
+      "driverName": "MOVE Driver",
+      "carNumber": "ABC-123",
+
     });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Ride Accepted ✅"),
+        ),
+      );
+    }
   }
 
   Future<void> startRide(String rideId) async {
-    await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
+
+    await FirebaseFirestore.instance
+        .collection("rides")
+        .doc(rideId)
+        .update({
+
       "status": "started",
+      "startedAt": FieldValue.serverTimestamp(),
+
     });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Ride Started 🚗"),
+        ),
+      );
+    }
   }
 
   Future<void> endRide(String rideId) async {
-    await FirebaseFirestore.instance.collection("rides").doc(rideId).update({
+
+    await FirebaseFirestore.instance
+        .collection("rides")
+        .doc(rideId)
+        .update({
+
       "status": "completed",
       "paymentStatus": "paid",
       "completedAt": FieldValue.serverTimestamp(),
-    });
-  }
 
-  @override
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Ride Completed 🎉"),
+        ),
+      );
+    }
+  }
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+
       appBar: AppBar(
         title: const Text("Driver Panel"),
         backgroundColor: Colors.orange,
       ),
+
       body: Column(
         children: [
+
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(15),
             color: Colors.grey.shade900,
             child: const Center(
               child: Text(
-                "Live Tracking Running...",
-                style: TextStyle(color: Colors.white),
+                "🟢 Driver Online - Live Tracking Running",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
@@ -122,8 +183,11 @@ class _DriverScreenState extends State<DriverScreen> {
                   .where("status", isEqualTo: "pending")
                   .snapshots(),
               builder: (context, snapshot) {
+
                 if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
 
                 final rides = snapshot.data!.docs;
@@ -132,7 +196,10 @@ class _DriverScreenState extends State<DriverScreen> {
                   return const Center(
                     child: Text(
                       "No Pending Rides",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
                     ),
                   );
                 }
@@ -140,18 +207,26 @@ class _DriverScreenState extends State<DriverScreen> {
                 return ListView.builder(
                   itemCount: rides.length,
                   itemBuilder: (context, index) {
+
                     final ride = rides[index];
 
                     return Card(
                       color: Colors.grey.shade900,
                       margin: const EdgeInsets.all(10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+
                       child: Padding(
                         padding: const EdgeInsets.all(15),
+
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
                           children: [
+
                             Text(
-                              "${ride["pickup"]} → ${ride["drop"]}",
+                              "${ride["pickup"]} ➜ ${ride["drop"]}",
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -163,15 +238,20 @@ class _DriverScreenState extends State<DriverScreen> {
 
                             Row(
                               children: [
-                                const Icon(  Icons.money,
+
+                                const Icon(
+                                  Icons.payments,
                                   color: Colors.green,
-                                  ),
-                                const SizedBox(width: 5),
+                                ),
+
+                                const SizedBox(width: 8),
+
                                 Text(
-                                  "Fare: PKR ${ride["fare"]}",
+                                  "PKR ${ride["fare"]}",
                                   style: const TextStyle(
                                     color: Colors.green,
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 17,
                                   ),
                                 ),
                               ],
@@ -180,26 +260,56 @@ class _DriverScreenState extends State<DriverScreen> {
                             const SizedBox(height: 10),
 
                             Text(
-                              "Status: ${ride["status"]}",
-                              style: const TextStyle(color: Colors.orange),
+                              "Status : ${ride["status"]}",
+                              style: const TextStyle(
+                                color: Colors.orange,
+                              ),
                             ),
 
                             const SizedBox(height: 15),
 
                             Wrap(
                               spacing: 10,
+                              runSpacing: 10,
                               children: [
+
                                 ElevatedButton(
-                                  onPressed: () => acceptRide(ride.id),
-                                  child: const Text("Accept"),
+                                  style:
+                                      ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Colors.blue,
+                                  ),
+                                  onPressed: () =>
+                                      acceptRide(ride.id),
+                                  child: const Text(
+                                    "Accept",
+                                  ),
                                 ),
+
                                 ElevatedButton(
-                                  onPressed: () => startRide(ride.id),
-                                  child: const Text("Start"),
+                                  style:
+                                      ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Colors.green,
+                                  ),
+                                  onPressed: () =>
+                                      startRide(ride.id),
+                                  child: const Text(
+                                    "Start",
+                                  ),
                                 ),
+
                                 ElevatedButton(
-                                  onPressed: () => endRide(ride.id),
-                                  child: const Text("End"),
+                                  style:
+                                      ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Colors.red,
+                                  ),
+                                  onPressed: () =>
+                                      endRide(ride.id),
+                                  child: const Text(
+                                    "Complete",
+                                  ),
                                 ),
                               ],
                             ),

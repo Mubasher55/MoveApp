@@ -55,20 +55,25 @@ class _BookRideScreenState extends State<BookRideScreen> {
       });
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
+
+setState(() {
+  _isLoading = false;
+});
+
+ScaffoldMessenger.of(context).showSnackBar(
   const SnackBar(
     content: Text("Ride Booked Successfully 🚖"),
   ),
 );
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => RideStatusScreen(
-            rideId: rideRef.id,
-          ),
-        ),
-      );
+Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(
+    builder: (_) => RideStatusScreen(
+      rideId: rideRef.id,
+    ),
+  ),
+);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),

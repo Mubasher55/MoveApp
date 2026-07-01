@@ -55,6 +55,11 @@ class _BookRideScreenState extends State<BookRideScreen> {
       });
 
       if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+  const SnackBar(
+    content: Text("Ride Booked Successfully 🚖"),
+  ),
+);
 
       Navigator.pushReplacement(
         context,
@@ -132,7 +137,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
               controller: _fareController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.currency_rupee),
+                prefixIcon: Icon(Icons.payments),
                 labelText: "Offer Fare",
                 border: OutlineInputBorder(),
               ),

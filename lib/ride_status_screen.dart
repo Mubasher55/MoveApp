@@ -42,7 +42,7 @@ class RideStatusScreen extends StatelessWidget {
   String getStatusText(String status) {
     switch (status) {
       case "pending":
-        return "Searching Driver...";
+        return "Searching Driver";
       case "accepted":
         return "Driver Accepted";
       case "started":
@@ -83,12 +83,10 @@ class RideStatusScreen extends StatelessWidget {
             );
           }
 
-          final data =
-              snapshot.data!.data() as Map<String, dynamic>;
-
+          final data = snapshot.data!.data() as Map<String, dynamic>;
           final status = data["status"] ?? "pending";
 
-          return Padding(
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
@@ -96,12 +94,12 @@ class RideStatusScreen extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 CircleAvatar(
-                  radius: 45,
+                  radius: 50,
                   backgroundColor: getStatusColor(status),
                   child: Icon(
                     getStatusIcon(status),
-                    size: 45,
                     color: Colors.white,
+                    size: 45,
                   ),
                 ),
 
@@ -111,7 +109,7 @@ class RideStatusScreen extends StatelessWidget {
                   getStatusText(status),
                   style: TextStyle(
                     color: getStatusColor(status),
-                    fontSize: 26,
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -135,9 +133,7 @@ class RideStatusScreen extends StatelessWidget {
                           ),
                           title: Text(
                             data["pickup"] ?? "",
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
 
@@ -150,9 +146,7 @@ class RideStatusScreen extends StatelessWidget {
                           ),
                           title: Text(
                             data["drop"] ?? "",
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
 
@@ -165,12 +159,10 @@ class RideStatusScreen extends StatelessWidget {
                           ),
                           title: Text(
                             "PKR ${data["fare"]}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
-                                              ],
+                      ],
                     ),
                   ),
                 ),
@@ -182,9 +174,8 @@ class RideStatusScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  return SingleChildScrollView(
                   child: Padding(
-                  padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
 
@@ -193,11 +184,10 @@ class RideStatusScreen extends StatelessWidget {
                           backgroundColor: Colors.orange,
                           child: Icon(
                             Icons.person,
-                            color: Colors.white,
                             size: 40,
+                            color: Colors.white,
                           ),
-                         ),
-                        );
+                        ),
 
                         const SizedBox(height: 15),
 
@@ -226,17 +216,19 @@ class RideStatusScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
 
+                const SizedBox(height: 30),
+                                Row(
+                  children: [
                     Expanded(
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
-                          minimumSize: const Size(0, 55),
+                          minimumSize: const Size(double.infinity, 55),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          // TODO: Call Driver
+                        },
                         icon: const Icon(Icons.call),
                         label: const Text("Call"),
                       ),
@@ -248,9 +240,11 @@ class RideStatusScreen extends StatelessWidget {
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
-                          minimumSize: const Size(0, 55),
+                          minimumSize: const Size(double.infinity, 55),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          // TODO: Open Chat
+                        },
                         icon: const Icon(Icons.chat),
                         label: const Text("Chat"),
                       ),
@@ -265,13 +259,9 @@ class RideStatusScreen extends StatelessWidget {
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
-                      minimumSize: const Size(
-                        double.infinity,
-                        55,
-                      ),
+                      minimumSize: const Size(double.infinity, 55),
                     ),
                     onPressed: () async {
-
                       await FirebaseFirestore.instance
                           .collection("rides")
                           .doc(rideId)
@@ -293,16 +283,15 @@ class RideStatusScreen extends StatelessWidget {
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
-                      minimumSize: const Size(
-                        double.infinity,
-                        55,
-                      ),
+                      minimumSize: const Size(double.infinity, 55),
                     ),
                     onPressed: () {},
                     icon: const Icon(Icons.refresh),
                     label: const Text("Refresh"),
                   ),
                 ),
+
+                const SizedBox(height: 20),
               ],
             ),
           );

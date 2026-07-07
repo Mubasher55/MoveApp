@@ -182,8 +182,9 @@ class RideStatusScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
+                  return SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
 
@@ -195,7 +196,8 @@ class RideStatusScreen extends StatelessWidget {
                             color: Colors.white,
                             size: 40,
                           ),
-                        ),
+                         ),
+                        );
 
                         const SizedBox(height: 15),
 
@@ -224,9 +226,7 @@ class RideStatusScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                const Spacer(),
-
+                const SizedBox(height: 30),
                 Row(
                   children: [
 

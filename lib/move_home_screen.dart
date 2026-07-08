@@ -3,6 +3,7 @@ import 'ride_booking.dart';
 import 'wallet_screen.dart';
 import 'driver_screen.dart';
 import 'map_screen.dart';
+import 'ride_selection_screen.dart';
 
 class MoveHomeScreen extends StatelessWidget {
   const MoveHomeScreen({super.key});
@@ -110,13 +111,13 @@ class MoveHomeScreen extends StatelessWidget {
                           backgroundColor: Colors.orange,
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const BookRideScreen(),
-                            ),
-                          );
-                        },
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                        builder: (_) => const RideSelectionScreen(),
+                        ),
+                      );
+                     },
                         child: const Text(
                           "BOOK RIDE",
                           style: TextStyle(

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+            import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'ride_status_screen.dart';
@@ -17,21 +17,27 @@ class _BookRideScreenState extends State<BookRideScreen> {
 
   bool _isLoading = false;
 
+  String _selectedCar = "Economy";
+
   Future<void> _bookRide() async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please Login First")),
+        const SnackBar(
+          content: Text("Please Login First"),
+        ),
       );
       return;
     }
 
-    if (_pickupController.text.isEmpty ||
-        _dropController.text.isEmpty ||
-        _fareController.text.isEmpty) {
+    if (_pickupController.text.trim().isEmpty ||
+        _dropController.text.trim().isEmpty ||
+        _fareController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill all fields")),
+        const SnackBar(
+          content: Text("Please fill all fields"),
+        ),
       );
       return;
     }
@@ -45,45 +51,46 @@ class _BookRideScreenState extends State<BookRideScreen> {
           await FirebaseFirestore.instance.collection("rides").add({
         "pickup": _pickupController.text.trim(),
         "drop": _dropController.text.trim(),
-        "fare": double.parse(_fareController.text.trim()),
+        "fare": double.tryParse(_fareController.text.trim()) ?? 0,
         "currency": "PKR",
-        "status": "Searching Driver",
+        "status": "pending",
         "driver": "",
-        "carType": "Car",
+        "carType": _selectedCar,
         "userId": user.uid,
+        "userEmail": user.email ?? "",
         "createdAt": FieldValue.serverTimestamp(),
       });
 
       if (!mounted) return;
 
-setState(() {
-  _isLoading = false;
-});
-
-ScaffoldMessenger.of(context).showSnackBar(
-  const SnackBar(
-    content: Text("Ride Booked Successfully 🚖"),
-  ),
-);
-
-Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(
-    builder: (_) => RideStatusScreen(
-      rideId: rideRef.id,
-    ),
-  ),
-);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
-    }
-
-    if (mounted) {
       setState(() {
         _isLoading = false;
       });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Ride Booked Successfully 🚖"),
+        ),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RideStatusScreen(
+            rideId: rideRef.id,
+          ),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $e"),
+        ),
+      );
     }
   }
 
@@ -117,11 +124,10 @@ Navigator.pushReplacement(
         title: const Text("Book Ride"),
         backgroundColor: Colors.orange,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-
             buildField(
               _pickupController,
               "Pickup Location",
@@ -148,6 +154,39 @@ Navigator.pushReplacement(
               ),
             ),
 
+            const SizedBox(height: 20),
+
+            DropdownButtonFormField<String>(
+              value: _selectedCar,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Select Ride",
+              ),
+              items: const [
+                DropdownMenuItem(
+                  value: "Economy",
+                  child: Text("MOVE Economy"),
+                ),
+                DropdownMenuItem(
+                  value: "Comfort",
+                  child: Text("MOVE Comfort"),
+                ),
+                DropdownMenuItem(
+                  value: "XL",
+                  child: Text("MOVE XL"),
+                ),
+                DropdownMenuItem(
+                  value: "Bike",
+                  child: Text("MOVE Bike"),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedCar = value!;
+                });
+              },
+            ),
+
             const SizedBox(height: 30),
 
             SizedBox(
@@ -163,8 +202,12 @@ Navigator.pushReplacement(
                         color: Colors.white,
                       )
                     : const Text(
-                        "BOOK RIDE",
-                        style: TextStyle(fontSize: 18),
+                        "CONFIRM RIDE",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
               ),
             ),
@@ -173,4 +216,4 @@ Navigator.pushReplacement(
       ),
     );
   }
-}                
+}

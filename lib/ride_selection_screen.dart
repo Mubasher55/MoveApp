@@ -63,24 +63,40 @@ class RideTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.grey.shade900,
-      child: ListTile(
-        leading: Icon(icon, color: Colors.orange, size: 35),
-        title: Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const BookRideScreen(),
+            ),
+          );
+        },
+        child: ListTile(
+          leading: Icon(
+            icon,
+            color: Colors.orange,
+            size: 35,
           ),
-        ),
-        subtitle: Text(
-          "$time away",
-          style: const TextStyle(color: Colors.white70),
-        ),
-        trailing: Text(
-          price,
-          style: const TextStyle(
-            color: Colors.green,
-            fontWeight: FontWeight.bold,
+          title: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text(
+            "$time away",
+            style: const TextStyle(
+              color: Colors.white70,
+            ),
+          ),
+          trailing: Text(
+            price,
+            style: const TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),

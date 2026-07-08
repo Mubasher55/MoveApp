@@ -390,4 +390,33 @@ class MoveHomeScreen extends StatelessWidget {
       ),
     );
   }
+  Widget driverCard(String name, String rating, String time) {
+  return Card(
+    color: Colors.grey.shade900,
+    child: ListTile(
+      leading: const CircleAvatar(
+        backgroundColor: Colors.orange,
+        child: Icon(Icons.person, color: Colors.white),
+      ),
+      title: Text(
+        name,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Text(
+        "⭐ $rating",
+        style: const TextStyle(color: Colors.white70),
+      ),
+      trailing: Text(
+        time,
+        style: const TextStyle(
+          color: Colors.green,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  );
+  }
 }
